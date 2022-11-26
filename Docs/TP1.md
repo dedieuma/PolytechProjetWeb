@@ -6,7 +6,7 @@
 - S'assurer que le template de base fonctionne
 - Découvrir la syntaxe dotnet
 - Créer un projet WebAPI
-- (Bonus) Créer un nouvel endpoint GET
+- (Bonus) Créer des nouvelles formes
 
 
 ## (1) Créer un projet Console
@@ -25,6 +25,9 @@ Allez à la racine du projet, assurez vous que le Hello World fonctionne avec la
 
 > 💡 dotnet run effectue au préalable deux autres commandes, si elles n'ont pas été faites avant : `dotnet restore` pour résoudre les librairies externes (équivalent `npm install`), et `dotnet build` pour compiler le projet.
 
+> ❗ Le projet n'a pas de méthode main ?
+
+> 💡 La syntaxe du Program.cs est une façon moderne de créer un projet console. Beaucoup de code a été caché par les mainteneurs du Projet dotnet. Il y a bien une méthode Main() en arrière-plan, mais elle nous est cachée. Le but était d'aider les nouveaux développeurs, pour qu'ils soient moins perdus lorsqu'ils débutaient avec du code nécessaire pour faire tourner l'appli.
 
 ---
 
@@ -273,3 +276,50 @@ public class Square : AShapeSide
 Placez votre terminal dans un nouveau dossier, et effectuez la commande
 
 `dotnet new webapi -n "<nom-du-projet>"`
+
+Cela crée un certain nombre de fichiers, suivant le template du type webapi.
+
+Les fichiers les plus intéressants sont : 
+- Program.cs, équivalent de la méthode main
+- WeatherForcast.cs, classe générée, qui contient les informations définissant une météo à une date => On appelle cela un Model.
+- Controllers/WeatherForecastController.cs : classe particulière permettant d'exposer des endpoint HTTP API Rest.
+
+Faites un `dotnet run`
+
+Vous devriez avoir une stack du type 
+````
+dotnet run
+Génération...
+info: Microsoft.Hosting.Lifetime[14]
+      Now listening on: http://localhost:XXXX
+info: Microsoft.Hosting.Lifetime[0]
+      Application started. Press Ctrl+C to shut down.
+info: Microsoft.Hosting.Lifetime[0]
+      Hosting environment: Development
+info: Microsoft.Hosting.Lifetime[0]
+````
+
+Accédez à l'url indiquée. Cela aboutit sur une page vierge, il faut rajouter `/swagger` derrière l'url. Exemple : `http://localhost:XXXX/swagger`
+
+> Si quelque chose ne fonctionne pas, essayez de faire `dotnet dev-certs https --check --trust`
+
+Une page particulière s'affiche : c'est une page Swagger (aussi appelée OpenAPI)
+
+> 💡 Swagger est un format normé qui définit, via un JSON, une page permettant d'interagir avec un serveur exposant des endpoint HTTP Rest. Cela n'a pas lié à dotnet, un Json Swagger peut être exporté et utilisé par d'autres langages.
+
+> 💡 dotnet n'expose pas par défaut un Swagger, ceci est fait via des commandes dans le Program.cs, comme par exemple `builder.Services.AddSwaggerGen();` ou `    app.UseSwagger();app.UseSwaggerUI();` Grâce à ces directives, dotnet va rechercher des endpoint HTTP dans le projet, et générer le JSON Swagger à partir de ceux-ci, et exposer le tout sous l'url /swagger.
+
+La page est interagissable : essayez de cliquer sur le bouton bleu GET /WeatherForecast. Cliquez sur le bouton TryItOut, puis Execute : une requête HTTP GET sur http://localhost:XXXX/WeatherForecast est effectué, et envoie une réponse avec le code 200 et un body.
+
+**Q3 : Que fait un verbe Http GET ? En existe-il d'autres ?**
+
+**Q4 : dans le code, où est défini ce GET /WeatherForecast ? Pouvez-vous expliquer ce que fait le code ?**
+
+Nous nous baserons sur ce projet pour le prochain TP.
+
+## (4) BONUS : Créez une nouvelle forme
+
+Reprenez le projet Console. Suivant le Rectangle et le carré, pouvez-vous ajouter d'autres formes ? Cercle, Triangle...
+
+**Copiez le code des classes que vous ferez dans la feuille de réponse**
+
