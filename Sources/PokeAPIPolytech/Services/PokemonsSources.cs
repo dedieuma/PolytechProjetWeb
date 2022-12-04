@@ -1,25 +1,6 @@
-
-namespace PokeAPIPolytech.Services;
 public class PokemonsSources : IPokemonsSources
 {
-    private List<Pokemon> pokemons = new List<Pokemon>();
-
-    public Pokemon Add(Pokemon pokemon)
-    {
-        pokemons.Add(pokemon);
-        return pokemon;
-    }
-
-    public IEnumerable<Pokemon> GetAll()
-    {
-        if (!pokemons.Any()){
-            pokemons = InitPokemons();
-        }
-
-        return pokemons;
-    }
-
-    private List<Pokemon> InitPokemons() => new List<Pokemon>
+    private List<Pokemon> pokemons = new List<Pokemon>
     {
         new Pokemon{
             Id = 1,
@@ -43,4 +24,30 @@ public class PokemonsSources : IPokemonsSources
                 PictureUrl = "https://img.pokemondb.net/artwork/large/squirtle.jpg"
         }
     };
+
+    public Pokemon Add(Pokemon pokemon)
+    {
+        pokemons.Add(pokemon);
+        return pokemon;
+    }
+
+    public IEnumerable<Pokemon> GetAll()
+    {
+        return pokemons;
+    }
+
+    public Pokemon? Update(int pokemonId, Pokemon pokemon)
+    {
+        var retrivedPokemon = pokemons.FirstOrDefault(pok => pok.Id == pokemonId);
+
+        if (retrivedPokemon == null){
+            return null;
+        }
+
+        retrivedPokemon.Description = pokemon.Description;
+        retrivedPokemon.Name = pokemon.Name;
+        retrivedPokemon.PictureUrl = pokemon.PictureUrl;
+        retrivedPokemon.Type = pokemon.Type;
+        return retrivedPokemon;
+    }
 }

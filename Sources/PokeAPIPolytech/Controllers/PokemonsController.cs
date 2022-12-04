@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using PokeAPIPolytech.Services;
 
 namespace PokeAPIPolytech.Controllers;
 
@@ -37,8 +36,14 @@ public class PokemonsController : ControllerBase
     }
 
     [HttpPost]
-    public Pokemon CreatePokemon(CreatePokemonDto createPokemonDto)
+    public IActionResult CreatePokemon(CreatePokemonDto createPokemonDto)
     {
+
+        if (_pokemonsSources.GetAll().Any(p => p.Id == createPokemonDto.Id))
+        {
+            return BadRequest();
+        }
+
         var pokemon = new Pokemon
         {
             Id = createPokemonDto.Id,
@@ -50,6 +55,21 @@ public class PokemonsController : ControllerBase
 
         _pokemonsSources.Add(pokemon);
 
-        return pokemon;
+        return Ok(pokemon);
+    }
+
+    [HttpPut("{pokemonId}")]
+    public Pokemon? UpdatePokemon(int pokemonId, UpdatePokemonDto updatePokemonDto)
+    {
+        
+        var pokemon = new Pokemon
+        {
+            Name = updatePokemonDto.Name,
+            Description = updatePokemonDto.Description,
+            PictureUrl = updatePokemonDto.PictureUrl,
+            Type = updatePokemonDto.Type
+        };
+
+        return _pokemonsSources.Update(pokemonId, pokemon);
     }
 }

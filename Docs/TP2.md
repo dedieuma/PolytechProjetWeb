@@ -18,6 +18,8 @@ Ouvrez la WebAPI dotnet que vous avez généré au TP précédent.
 
 Supprimez Controllers/WeatherForecaseController.cs et WeatherForecast.cs.
 
+---
+
 ## (1) Définition d'un pokémon
 
 Avant d'exposer des endpoint API Rest, il nous faut définir un pokémon.
@@ -63,6 +65,8 @@ public enum PokemonType{
 ````
 
 > 💡 Un `enum` est, pour simplifier, une liste de constantes définies sous un seul et même type. **En dotnet :** c'est une extension du type primitif `int`
+
+---
 
 ## (2) Création d'une méthode GET
 
@@ -159,9 +163,13 @@ public IActionResult GetPokemonById(int id)
 
 **Q8 : que se passe-t-il à présent lorsque l'on met un ID invalide ?**
 
+---
+
 ## (3) Création d'un autre controller
 
 De la même manière que le controller que l'on vient de construire, faites un nouveau controller qui permet d'exposer les Types de pokemons via une méthode GET.
+
+---
 
 ## (4) Création d'une méthode POST
 
@@ -187,4 +195,128 @@ public Pokemon CreatePokemon(CreatePokemonDto createPokemonDto)
     return pokemon;
 }
 ````
+
+✍️ Créez la classe Dtos/CreatePokemonDto.cs de façon à ce que cela compile.
+
+Testez de faire un POST avec un nouveau pokemon, puis refaites un GET All.
+Le nouveau pokemon n'apparaît pas !
+
+> 💡 C'est parce que la liste est "recréée" à chaque fois que le serveur traite une requête...
+
+Pour régler cela, il faut exporter la liste des Pokemons dans un service à part, qui sera singleton.
+
+**Q9 : qu'est-ce qu'un singleton ?**
+
+Créez deux fichiers : Services/IPokemonsSources.cs et Services/PokemonSources.cs
+
+````csharp
+public interface IPokemonsSources{
+
+    IEnumerable<Pokemon> GetAll();
+
+    Pokemon Add(Pokemon pokemon);
+}
+````
+
+````csharp
+public class PokemonsSources : IPokemonsSources
+{
+    private List<Pokemon> pokemons = new List<Pokemon>
+    {
+        new Pokemon{
+            Id = 1,
+            Name = "Bulbasaur",
+            Description = "A strange seed was planted on its back at birth. The plant sprouts and grows with this POKéMON.",
+            Type = PokemonType.Grass,
+            PictureUrl = "https://img.pokemondb.net/artwork/large/bulbasaur.jpg"
+        },
+            new Pokemon{
+                Id = 2,
+                Name = "Charmander",
+                Description = "Obviously prefers hot places. When it rains, steam is said to spout from the tip of its tail.",
+                Type = PokemonType.Fire,
+                PictureUrl = "https://img.pokemondb.net/artwork/large/charmander.jpg"
+        },
+            new Pokemon{
+                Id = 3,
+                Name = "Squirtle",
+                Description = "After birth, its back swells and hardens into a shell. Powerfully sprays foam from its mouth.",
+                Type = PokemonType.Water,
+                PictureUrl = "https://img.pokemondb.net/artwork/large/squirtle.jpg"
+        }
+    };
+
+    public Pokemon Add(Pokemon pokemon)
+    {
+        pokemons.Add(pokemon);
+        return pokemon;
+    }
+
+    public IEnumerable<Pokemon> GetAll()
+    {
+        return pokemons;
+    }
+}
+````
+
+N'oubliez pas de supprimer la liste initiale qui était dans le controller.
+
+Dans le Program.cs, ajoutez : 
+````csharp
+builder.Services.AddSwaggerGen(); //existant
+
+builder.Services.AddSingleton<IPokemonsSources, PokemonsSources>(); //à ajouter
+
+var app = builder.Build(); //existant
+````
+
+Dans PokemonsController, ajoutez : 
+````csharp
+    private readonly ILogger<PokemonsController> _logger; //existant
+    private readonly IPokemonsSources _pokemonsSources; //à ajouter
+
+
+
+    public PokemonsController(
+        ILogger<PokemonsController> logger,
+        IPokemonsSources pokemonsSources)
+    {
+        _logger = logger;
+        _pokemonsSources = pokemonsSources;
+    }
+````
+✍️ mettez à jour la classe pour que cela compile à nouveau.
+
+Lancez le service. Est-ce que cela fonctionne comme attendu ?
+
+**Q10 : que se passe-t-il si je rajoute via POST un pokémon qui a le même Id qu'un autre ? Pouvez-vous rajouter de la logique pour faire en sorte que cela ne se produise pas ?**
+
+---
+
+## (5) Creation d'une méthode PUT
+
+Allons mettre à jour un pokémon.
+
+````csharp
+[HttpPut("{pokemonId}")]
+public Pokemon? UpdatePokemon(int pokemonId, UpdatePokemonDto updatePokemonDto)
+{
+    
+    var pokemon = new Pokemon
+    {
+        Name = updatePokemonDto.Name,
+        Description = updatePokemonDto.Description,
+        PictureUrl = updatePokemonDto.PictureUrl,
+        Type = updatePokemonDto.Type
+    };
+
+    return _pokemonsSources.Update(pokemonId, pokemon);
+}
+````
+
+✍️ Ecrivez la méthode Update dans PokemonsSources, de même que la classe UpdatePokemonDto
+
+✍️ De la même manière que la méthode GET by id, pouvez vous modifier la méthode pour que le controller renvoie Not Found si jamais l'Id entré est invalide ?
+
+
 
