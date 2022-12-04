@@ -6,7 +6,6 @@
 - S'assurer que le template de base fonctionne
 - Découvrir la syntaxe dotnet
 - Créer un projet WebAPI
-- (Bonus) Créer des nouvelles formes
 
 
 ## (1) Créer un projet Console
@@ -317,9 +316,62 @@ La page est interagissable : essayez de cliquer sur le bouton bleu GET /WeatherF
 
 Nous nous baserons sur ce projet pour le prochain TP.
 
-## (4) BONUS : Créez une nouvelle forme
+
+**Le minimum du travail à faire sur ce TP est effectué, les prochaines étapes sont destinés à ceux qui sont chauds du dotnet 😉**
+
+---
+## (4) Créez une nouvelle forme
 
 Reprenez le projet Console. Suivant le Rectangle et le carré, pouvez-vous ajouter d'autres formes ? Cercle, Triangle...
 
-**Copiez le code des classes que vous ferez dans la feuille de réponse**
+**Q5 : Copiez le code des classes que vous ferez dans la feuille de réponse**
 
+---
+## (5) Linq
+
+Copiez
+
+````csharp
+var list = new List<IShape>{
+
+    new Rectangle(3, 2),
+    new Square(5),
+    new Rectangle(10, 20),
+    new Rectangle(100, 20)
+};
+````
+
+Utilisez Linq pour savoir :
+- Quels sont les formes où la longueur est un multiple de 5
+- Sur ces formes, faites l'addition de leurs périmètres, et affichez le dans la Console.
+
+> Linq est une bibliothèque dotnet permettant de faire des opérations sur les énumérations. Il s'utilise de cette manière : `maListe.MonOpérationLinq()`. Consultez https://www.tutorialsteacher.com/linq
+
+---
+## (6) Afficher les formes dans la Console
+
+Ajoutez une méthode `Print()` dans `IShape`
+
+Le but de cette méthode est de desssiner la forme correspondante dans la console.
+
+Par exemple :
+
+````csharp
+Rectangle rectangle = new Rectangle(3, 2);
+rectangle.Print();
+````
+
+Devrait retourner :
+
+````
+- - -
+|   |
+|   |
+- - -
+````
+
+> Note : `Console.WriteLine()` écrit dans la console, puis fait un retour à la ligne. `Console.Write()` écrit dans la console sans retourner à la ligne.
+
+**Q6 : Copiez le code des classes que vous ferez dans la feuille de réponse**
+
+> Pouvez-vous refaire l'exercice, mais à la place des `for` ou `foreach`, utiliser Linq ?
