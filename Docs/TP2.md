@@ -319,4 +319,34 @@ public Pokemon? UpdatePokemon(int pokemonId, UpdatePokemonDto updatePokemonDto)
 ✍️ De la même manière que la méthode GET by id, pouvez vous modifier la méthode pour que le controller renvoie Not Found si jamais l'Id entré est invalide ?
 
 
+---
 
+## (6) Creation d'une méthode DELETE
+
+Complétez comme il faut ce début d'endpoint DELETE : 
+
+````csharp
+[HttpDelete("pokemonId")]
+public void DeletePokemon(int pokemonId){
+
+    // à vous
+}
+````
+
+> 💡 N'oubliez pas de faire en sorte que la méthode renvoie NotFound si jamais l'id est invalide...
+
+Bravo, vous avez implémenté votre premier CRUD !
+
+---
+
+**Q11 : Si je lance le serveur, que je rajoute un pokemon, que j'éteins le serveur, que je le rallume, et que je fais un GetAll, que se passe-t-il ? Que faudrait t-il faire pour résoudre le problème ?**
+
+---
+
+## (7) [A partir de maintenant : Bonus] Changement de la définition d'un pokemon
+
+Modifiez la définition d'un pokemon en rajoutant/modifiant ce que vous voulez. Mettez à jour le controlleur.
+
+## (8) [Bonus étalé sur le TP 2 et TP 3] Se brancher à PokéAPI
+
+Nous avons

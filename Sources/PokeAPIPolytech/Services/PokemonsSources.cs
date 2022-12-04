@@ -31,6 +31,11 @@ public class PokemonsSources : IPokemonsSources
         return pokemon;
     }
 
+    public void DeletePokemon(int pokemonId)
+    {
+        pokemons.RemoveAll(pok => pok.Id == pokemonId);
+    }
+
     public IEnumerable<Pokemon> GetAll()
     {
         return pokemons;

@@ -59,9 +59,9 @@ public class PokemonsController : ControllerBase
     }
 
     [HttpPut("{pokemonId}")]
-    public Pokemon? UpdatePokemon(int pokemonId, UpdatePokemonDto updatePokemonDto)
+    public IActionResult UpdatePokemon(int pokemonId, UpdatePokemonDto updatePokemonDto)
     {
-        
+
         var pokemon = new Pokemon
         {
             Name = updatePokemonDto.Name,
@@ -70,6 +70,25 @@ public class PokemonsController : ControllerBase
             Type = updatePokemonDto.Type
         };
 
-        return _pokemonsSources.Update(pokemonId, pokemon);
+        var pokemonUpdated = _pokemonsSources.Update(pokemonId, pokemon);
+
+        return pokemonUpdated == null
+        ? BadRequest()
+        : Ok(pokemonUpdated);
+    }
+
+    [HttpDelete("pokemonId")]
+    public IActionResult DeletePokemon(int pokemonId)
+    {
+        var pokemon = _pokemonsSources
+            .GetAll()
+            .FirstOrDefault(pok => pok.Id == pokemonId);
+
+        if (pokemon == null){
+            return NotFound();
+        }
+
+        _pokemonsSources.DeletePokemon(pokemonId);
+        return NoContent();
     }
 }

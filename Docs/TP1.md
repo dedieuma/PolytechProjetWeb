@@ -320,7 +320,7 @@ Nous nous baserons sur ce projet pour le prochain TP.
 **Le minimum du travail à faire sur ce TP est effectué, les prochaines étapes sont destinés à ceux qui sont chauds du dotnet 😉**
 
 ---
-## (4) Créez une nouvelle forme
+## (4) [A partir de maintenant : Bonus] Créez une nouvelle forme
 
 Reprenez le projet Console. Suivant le Rectangle et le carré, pouvez-vous ajouter d'autres formes ? Cercle, Triangle...
 
