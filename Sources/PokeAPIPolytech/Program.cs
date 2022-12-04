@@ -8,6 +8,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddSingleton<IPokemonsSources, PokemonsSources>();
+builder.Services.AddScoped<IPokeApi, PokeApi>();
+
+builder.Services.AddHttpClient();
 
 var app = builder.Build();
 

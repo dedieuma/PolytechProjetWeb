@@ -349,4 +349,58 @@ Modifiez la définition d'un pokemon en rajoutant/modifiant ce que vous voulez. 
 
 ## (8) [Bonus étalé sur le TP 2 et TP 3] Se brancher à PokéAPI
 
-Nous avons
+Nous avons défini en local des pokémons. Mais un service Web existe déjà, qui expose tous les pokémons ! Il s'agit de https://pokeapi.co/
+
+Ajoutez un nouveau controller : PokeApiController.cs. Et un nouveau service : PokeApi.cs (et IPokeApi.cs)
+
+````csharp
+using Microsoft.AspNetCore.Mvc;
+
+namespace PokeAPIPolytech.Controllers;
+
+[ApiController]
+[Route("[controller]")]
+public class PokeApiController : ControllerBase
+{
+    private readonly ILogger<PokeApiController> _logger;
+    private readonly IPokeAPI _pokeAPI;
+
+
+
+    public PokeApiController(
+        ILogger<PokeApiController> logger,
+        IPokeAPI pokeAPI)
+    {
+        _logger = logger;
+        this._pokeAPI = pokeAPI;
+    }
+}
+````
+
+Program.cs :
+
+````csharp
+builder.Services.AddScoped<IPokeApi, PokeApi>();
+
+builder.Services.AddHttpClient();
+````
+
+PokeApi.cs
+
+````csharp
+public class PokeApi : IPokeApi
+{
+    private readonly HttpClient _client;
+
+    public PokeApi(HttpClient client)
+    {
+        _client = client;
+    }
+}
+````
+
+Utilisez ce dont vous avez vu ce TP pour créer un endpoint GET GetByPokemonName(), qui ira chercher sur PokeApi le pokémon correspondant au nom entré.
+
+> 💡 HttpClient est l'outil dotnet permettant de faire des requêtes HTTP dans le code.
+
+> 💡 Vous pouvez vous aider de sites comme https://json2csharp.com/ pour convertir un fichier JSON en classe dotnet. C'est particulièrement utile pour convertir un résultat d'une requête HTTP (qui est en JSON) en classes typées dotnet.
