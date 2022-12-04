@@ -10,4 +10,6 @@ public abstract class AShapeSide : IShape
     public double GetPerimeter(){
         return 0;
     }
+
+    public abstract void Print();
 }

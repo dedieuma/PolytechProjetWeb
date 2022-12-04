@@ -5,4 +5,9 @@ public class Square : AShapeSide
         this.Longueur = side;
         this.Largeur = side;
     }
+
+    public override void Print()
+    {
+        throw new NotImplementedException();
+    }
 }
