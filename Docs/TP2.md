@@ -133,12 +133,31 @@ public Pokemon? GetPokemonById(int id){
     return Pokemons.FirstOrDefault(pok => pok.Id == id);
 }
 ````
+> 💡 `Pokemons.FirstOrDefault()` est du Linq
 
 **Q5 : qu'est-ce que cela renvoie ?**
 
-**Q6 : changez le `[HttpGet("{id}")]` en `[HttpGet("{idd}")]`. Que se passe-t-il sur la requête ? Que se passe-t-il sur l'url en particulier ?**
+**Q6 : que se passe-t-il si vous entrez un Id qui n'est pas dans le tableau de base ? En quoi est-ce invalide ?**
 
-> 💡 `Pokemons.FirstOrDefault()` est du Linq
+**Q7 : changez le `[HttpGet("{id}")]` en `[HttpGet("{idd}")]`. Que se passe-t-il sur la requête ? Que se passe-t-il sur l'url en particulier ?**
+
+> 💡 Ok c'est bien, mais j'aimerais bien renvoyer le bon HTTP status code si jamais on entre un ID invalide.
+
+Mettons à jour la méthode : 
+
+````csharp
+[HttpGet("{id}")]
+public IActionResult GetPokemonById(int id)
+{
+    var pokemon = Pokemons.FirstOrDefault(pok => pok.Id == id);
+
+    return pokemon == default
+    ? NotFound()
+    : Ok(pokemon);
+}
+````
+
+**Q8 : que se passe-t-il à présent lorsque l'on met un ID invalide ?**
 
 ## (3) Création d'un autre controller
 
@@ -149,4 +168,23 @@ De la même manière que le controller que l'on vient de construire, faites un n
 Reprenez PokemonsController.cs
 
 Ajoutez une méthode POST.
+
+````csharp
+[HttpPost]
+public Pokemon CreatePokemon(CreatePokemonDto createPokemonDto)
+{
+    var pokemon = new Pokemon
+    {
+        Id = createPokemonDto.Id,
+        Name = createPokemonDto.Name,
+        Description = createPokemonDto.Description,
+        PictureUrl = createPokemonDto.PictureUrl,
+        Type = createPokemonDto.Type
+    };
+
+    Pokemons = Pokemons.Append(pokemon);
+
+    return pokemon;
+}
+````
 

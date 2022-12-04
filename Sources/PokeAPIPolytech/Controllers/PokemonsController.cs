@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using PokeAPIPolytech.Services;
 
 namespace PokeAPIPolytech.Controllers;
 
@@ -7,45 +8,48 @@ namespace PokeAPIPolytech.Controllers;
 public class PokemonsController : ControllerBase
 {
     private readonly ILogger<PokemonsController> _logger;
+    private readonly IPokemonsSources _pokemonsSources;
 
-    private IEnumerable<Pokemon> Pokemons = new List<Pokemon>
-    {
-        new Pokemon{
-            Id = 1,
-            Name = "Bulbasaur",
-            Description = "A strange seed was planted on its back at birth. The plant sprouts and grows with this POKéMON.",
-            Type = PokemonType.Grass,
-            PictureUrl = "https://img.pokemondb.net/artwork/large/bulbasaur.jpg"
-        },
-            new Pokemon{
-                Id = 2,
-                Name = "Charmander",
-                Description = "Obviously prefers hot places. When it rains, steam is said to spout from the tip of its tail.",
-                Type = PokemonType.Fire,
-                PictureUrl = "https://img.pokemondb.net/artwork/large/charmander.jpg"
-        },
-            new Pokemon{
-                Id = 3,
-                Name = "Squirtle",
-                Description = "After birth, its back swells and hardens into a shell. Powerfully sprays foam from its mouth.",
-                Type = PokemonType.Water,
-                PictureUrl = "https://img.pokemondb.net/artwork/large/squirtle.jpg"
-        }
-    };
 
-    public PokemonsController(ILogger<PokemonsController> logger)
+
+    public PokemonsController(
+        ILogger<PokemonsController> logger,
+        IPokemonsSources pokemonsSources)
     {
         _logger = logger;
+        _pokemonsSources = pokemonsSources;
     }
 
     [HttpGet("All")]
     public IEnumerable<Pokemon> GetAllPokemons()
     {
-        return Pokemons;
+        return _pokemonsSources.GetAll();
     }
 
-    [HttpGet("{idd}")]
-    public Pokemon? GetPokemonById(int id){
-        return Pokemons.FirstOrDefault(pok => pok.Id == id);
+    [HttpGet("{id}")]
+    public IActionResult GetPokemonById(int id)
+    {
+        var pokemon = _pokemonsSources.GetAll().FirstOrDefault(pok => pok.Id == id);
+
+        return pokemon == default
+        ? NotFound()
+        : Ok(pokemon);
+    }
+
+    [HttpPost]
+    public Pokemon CreatePokemon(CreatePokemonDto createPokemonDto)
+    {
+        var pokemon = new Pokemon
+        {
+            Id = createPokemonDto.Id,
+            Name = createPokemonDto.Name,
+            Description = createPokemonDto.Description,
+            PictureUrl = createPokemonDto.PictureUrl,
+            Type = createPokemonDto.Type
+        };
+
+        _pokemonsSources.Add(pokemon);
+
+        return pokemon;
     }
 }
