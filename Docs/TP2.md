@@ -2,7 +2,7 @@
 
 POKEMONS !
 
-## Objectifs : 
+## Objectifs
 
 - Créer un CRUD sur les pokémons
 
@@ -16,7 +16,7 @@ C'est ce service que vous allez devoir réutiliser lors des cours sur le Fronten
 
 Ouvrez la WebAPI dotnet que vous avez généré au TP précédent.
 
-Supprimez Controllers/WeatherForecaseController.cs et WeatherForecast.cs.
+Supprimez `Controllers/WeatherForecaseController.cs` et `WeatherForecast.cs`.
 
 ---
 
@@ -24,11 +24,11 @@ Supprimez Controllers/WeatherForecaseController.cs et WeatherForecast.cs.
 
 Avant d'exposer des endpoint API Rest, il nous faut définir un pokémon.
 
-Créez un fichier Models/Pokemon.cs
+Créez un fichier `Models/Pokemon.cs`
 
 ````csharp
-public class Pokemon{
-
+public class Pokemon 
+{
     public int Id { get; set; }
     public string Name { get; set; } = string.Empty;
     public PokemonType Type { get; set; } 
@@ -38,11 +38,11 @@ public class Pokemon{
 }
 ````
 
-puis une class Models/PokemonType.cs
+puis une class `Models/PokemonType.cs`
 
 ````csharp
-public enum PokemonType{
-    
+public enum PokemonType 
+{    
     Normal,
     Fighting,
     Flying,
@@ -70,7 +70,7 @@ public enum PokemonType{
 
 ## (2) Création d'une méthode GET
 
-Créez un fichier Controllers/PokemonsController.cs
+Créez un fichier `Controllers/PokemonsController.cs`
 
 ````csharp
 using Microsoft.AspNetCore.Mvc;
@@ -83,26 +83,29 @@ public class PokemonsController : ControllerBase
 
     private IEnumerable<Pokemon> Pokemons = new List<Pokemon>
     {
-        new Pokemon{
+        new Pokemon 
+        {
             Id = 1,
             Name = "Bulbasaur",
             Description = "A strange seed was planted on its back at birth. The plant sprouts and grows with this POKéMON.",
             Type = PokemonType.Grass,
             PictureUrl = "https://img.pokemondb.net/artwork/large/bulbasaur.jpg"
         },
-            new Pokemon{
-                Id = 2,
-                Name = "Charmander",
-                Description = "Obviously prefers hot places. When it rains, steam is said to spout from the tip of its tail.",
-                Type = PokemonType.Fire,
-                PictureUrl = "https://img.pokemondb.net/artwork/large/charmander.jpg"
+        new Pokemon 
+        {
+            Id = 2,
+            Name = "Charmander",
+            Description = "Obviously prefers hot places. When it rains, steam is said to spout from the tip of its tail.",
+            Type = PokemonType.Fire,
+            PictureUrl = "https://img.pokemondb.net/artwork/large/charmander.jpg"
         },
-            new Pokemon{
-                Id = 3,
-                Name = "Squirtle",
-                Description = "After birth, its back swells and hardens into a shell. Powerfully sprays foam from its mouth.",
-                Type = PokemonType.Water,
-                PictureUrl = "https://img.pokemondb.net/artwork/large/squirtle.jpg"
+        new Pokemon 
+        {
+            Id = 3,
+            Name = "Squirtle",
+            Description = "After birth, its back swells and hardens into a shell. Powerfully sprays foam from its mouth.",
+            Type = PokemonType.Water,
+            PictureUrl = "https://img.pokemondb.net/artwork/large/squirtle.jpg"
         }
     };
 
@@ -133,10 +136,12 @@ Faisons dorénavant une autre méthode GET, permettant de récupérer un pokémo
 
 ````csharp
 [HttpGet("{id}")]
-public Pokemon? GetPokemonById(int id){
+public Pokemon? GetPokemonById(int id)
+{
     return Pokemons.FirstOrDefault(pok => pok.Id == id);
 }
 ````
+
 > 💡 `Pokemons.FirstOrDefault()` est du Linq
 
 **Q5 : qu'est-ce que cela renvoie ?**
@@ -147,7 +152,7 @@ public Pokemon? GetPokemonById(int id){
 
 > 💡 Ok c'est bien, mais j'aimerais bien renvoyer le bon HTTP status code si jamais on entre un ID invalide.
 
-Mettons à jour la méthode : 
+Mettons à jour la méthode :
 
 ````csharp
 [HttpGet("{id}")]
@@ -173,7 +178,7 @@ De la même manière que le controller que l'on vient de construire, faites un n
 
 ## (4) Création d'une méthode POST
 
-Reprenez PokemonsController.cs
+Reprenez `PokemonsController.cs`
 
 Ajoutez une méthode POST.
 
@@ -196,7 +201,7 @@ public Pokemon CreatePokemon(CreatePokemonDto createPokemonDto)
 }
 ````
 
-✍️ Créez la classe Dtos/CreatePokemonDto.cs de façon à ce que cela compile.
+✍️ Créez la classe `Dtos/CreatePokemonDto.cs` de façon à ce que cela compile.
 
 Testez de faire un POST avec un nouveau pokemon, puis refaites un GET All.
 Le nouveau pokemon n'apparaît pas !
@@ -207,11 +212,11 @@ Pour régler cela, il faut exporter la liste des Pokemons dans un service à par
 
 **Q9 : qu'est-ce qu'un singleton ?**
 
-Créez deux fichiers : Services/IPokemonsSources.cs et Services/PokemonSources.cs
+Créez deux fichiers : `Services/IPokemonsSources.cs` et `Services/PokemonSources.cs`
 
 ````csharp
-public interface IPokemonsSources{
-
+public interface IPokemonsSources 
+{
     IEnumerable<Pokemon> GetAll();
 
     Pokemon Add(Pokemon pokemon);
@@ -223,27 +228,30 @@ public class PokemonsSources : IPokemonsSources
 {
     private List<Pokemon> pokemons = new List<Pokemon>
     {
-        new Pokemon{
+        new Pokemon
+        {
             Id = 1,
             Name = "Bulbasaur",
             Description = "A strange seed was planted on its back at birth. The plant sprouts and grows with this POKéMON.",
             Type = PokemonType.Grass,
             PictureUrl = "https://img.pokemondb.net/artwork/large/bulbasaur.jpg"
         },
-            new Pokemon{
-                Id = 2,
-                Name = "Charmander",
-                Description = "Obviously prefers hot places. When it rains, steam is said to spout from the tip of its tail.",
-                Type = PokemonType.Fire,
-                PictureUrl = "https://img.pokemondb.net/artwork/large/charmander.jpg"
+        new Pokemon
+        {
+            Id = 2,
+            Name = "Charmander",
+            Description = "Obviously prefers hot places. When it rains, steam is said to spout from the tip of its tail.",
+            Type = PokemonType.Fire,
+            PictureUrl = "https://img.pokemondb.net/artwork/large/charmander.jpg"
         },
-            new Pokemon{
-                Id = 3,
-                Name = "Squirtle",
-                Description = "After birth, its back swells and hardens into a shell. Powerfully sprays foam from its mouth.",
-                Type = PokemonType.Water,
-                PictureUrl = "https://img.pokemondb.net/artwork/large/squirtle.jpg"
-        }
+        new Pokemon
+        {
+            Id = 3,
+            Name = "Squirtle",
+            Description = "After birth, its back swells and hardens into a shell. Powerfully sprays foam from its mouth.",
+            Type = PokemonType.Water,
+            PictureUrl = "https://img.pokemondb.net/artwork/large/squirtle.jpg"
+        }   
     };
 
     public Pokemon Add(Pokemon pokemon)
@@ -261,7 +269,8 @@ public class PokemonsSources : IPokemonsSources
 
 N'oubliez pas de supprimer la liste initiale qui était dans le controller.
 
-Dans le Program.cs, ajoutez : 
+Dans le `Program.cs`, ajoutez :
+
 ````csharp
 builder.Services.AddSwaggerGen(); //existant
 
@@ -270,12 +279,11 @@ builder.Services.AddSingleton<IPokemonsSources, PokemonsSources>(); //à ajouter
 var app = builder.Build(); //existant
 ````
 
-Dans PokemonsController, ajoutez : 
+Dans `PokemonsController`, ajoutez :
+
 ````csharp
     private readonly ILogger<PokemonsController> _logger; //existant
     private readonly IPokemonsSources _pokemonsSources; //à ajouter
-
-
 
     public PokemonsController(
         ILogger<PokemonsController> logger,
@@ -285,6 +293,7 @@ Dans PokemonsController, ajoutez :
         _pokemonsSources = pokemonsSources;
     }
 ````
+
 ✍️ mettez à jour la classe pour que cela compile à nouveau.
 
 Lancez le service. Est-ce que cela fonctionne comme attendu ?
@@ -300,8 +309,7 @@ Allons mettre à jour un pokémon.
 ````csharp
 [HttpPut("{pokemonId}")]
 public Pokemon? UpdatePokemon(int pokemonId, UpdatePokemonDto updatePokemonDto)
-{
-    
+{   
     var pokemon = new Pokemon
     {
         Name = updatePokemonDto.Name,
@@ -316,19 +324,18 @@ public Pokemon? UpdatePokemon(int pokemonId, UpdatePokemonDto updatePokemonDto)
 
 ✍️ Ecrivez la méthode Update dans PokemonsSources, de même que la classe UpdatePokemonDto
 
-✍️ De la même manière que la méthode GET by id, pouvez vous modifier la méthode pour que le controller renvoie Not Found si jamais l'Id entré est invalide ?
-
+✍️ De la même manière que la méthode GET by id, pouvez-vous modifier la méthode pour que le controller renvoie Not Found si jamais l'Id entré est invalide ?
 
 ---
 
 ## (6) Creation d'une méthode DELETE
 
-Complétez comme il faut ce début d'endpoint DELETE : 
+Complétez comme il faut ce début d'endpoint DELETE :
 
 ````csharp
 [HttpDelete("pokemonId")]
-public void DeletePokemon(int pokemonId){
-
+public void DeletePokemon(int pokemonId)
+{
     // à vous
 }
 ````
@@ -349,9 +356,9 @@ Modifiez la définition d'un pokemon en rajoutant/modifiant ce que vous voulez. 
 
 ## (8) [Bonus étalé sur le TP 2 et TP 3] Se brancher à PokéAPI
 
-Nous avons défini en local des pokémons. Mais un service Web existe déjà, qui expose tous les pokémons ! Il s'agit de https://pokeapi.co/
+Nous avons défini en local des pokémons. Mais un service Web existe déjà, qui expose tous les pokémons ! Il s'agit de <https://pokeapi.co/>
 
-Ajoutez un nouveau controller : PokeApiController.cs. Et un nouveau service : PokeApi.cs (et IPokeApi.cs)
+Ajoutez un nouveau controller : `PokeApiController.cs`. Et un nouveau service : `PokeApi.cs` (et `IPokeApi.cs`)
 
 ````csharp
 using Microsoft.AspNetCore.Mvc;
@@ -365,8 +372,6 @@ public class PokeApiController : ControllerBase
     private readonly ILogger<PokeApiController> _logger;
     private readonly IPokeAPI _pokeAPI;
 
-
-
     public PokeApiController(
         ILogger<PokeApiController> logger,
         IPokeAPI pokeAPI)
@@ -377,7 +382,7 @@ public class PokeApiController : ControllerBase
 }
 ````
 
-Program.cs :
+`Program.cs` :
 
 ````csharp
 builder.Services.AddScoped<IPokeApi, PokeApi>();
@@ -385,7 +390,7 @@ builder.Services.AddScoped<IPokeApi, PokeApi>();
 builder.Services.AddHttpClient();
 ````
 
-PokeApi.cs
+`PokeApi.cs`
 
 ````csharp
 public class PokeApi : IPokeApi
@@ -399,8 +404,8 @@ public class PokeApi : IPokeApi
 }
 ````
 
-Utilisez ce dont vous avez vu ce TP pour créer un endpoint GET GetByPokemonName(), qui ira chercher sur PokeApi le pokémon correspondant au nom entré.
+Utilisez ce dont vous avez vu dans ce TP pour créer un endpoint GET GetByPokemonName(), qui ira chercher sur PokeApi le pokémon correspondant au nom entré.
 
 > 💡 HttpClient est l'outil dotnet permettant de faire des requêtes HTTP dans le code.
 
-> 💡 Vous pouvez vous aider de sites comme https://json2csharp.com/ pour convertir un fichier JSON en classe dotnet. C'est particulièrement utile pour convertir un résultat d'une requête HTTP (qui est en JSON) en classes typées dotnet.
+> 💡 Vous pouvez vous aider de sites comme <https://json2csharp.com/> pour convertir un fichier JSON en classe dotnet. C'est particulièrement utile pour convertir un résultat d'une requête HTTP (qui est en JSON) en classes typées dotnet.
