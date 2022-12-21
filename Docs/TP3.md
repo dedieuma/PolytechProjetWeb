@@ -32,7 +32,7 @@ Dans le `Program.cs`, ajoutez la ligne
 ````csharp
 builder.Services.AddSwaggerGen(); // existant
 
-builder.Services.AddDbContext<PokemonContext>(options => options.UseSqlite("pokemons.db")); // à ajouter
+builder.Services.AddDbContext<PokemonContext>(options => options.UseSqlite("Data Source=pokemons.db")); // à ajouter
 
 var app = builder.Build(); // existant
 ````
@@ -57,4 +57,113 @@ public class PokemonContext : DbContext
 > 💡 Un `DbContext` sert à faire une session avec la base de donnée. C'est par ce fichier que EF Core va faire des query et sauvegarder les instances des entités.
 
 > 💡 `public DbSet<Pokemon> Pokemons` permet de déclarer à EF Core que notre Model `Pokemon.cs` et ses propriétés doit être mappé à une table SQL, qui aura (par défaut) le nom... Pokemons.
+
+Ajoutons des données à notre Base, via EF Core.
+
+Tout d'abord, rendons notre liste de Pokémons `static` pour pouvoir y accéder depuis l'extérieur de la classe.
+
+`Services/PokemonsSources.cs` : 
+
+````csharp
+public static List<Pokemon> Pokemons = new List<Pokemon>
+....
+````
+
+Revenez à `Repositories/PokemonContext.cs`, ajoutez :
+
+````csharp
+protected override void OnModelCreating(ModelBuilder modelBuilder)
+{
+    modelBuilder.Entity<Pokemon>()
+        .HasData(PokemonsSources.Pokemons);
+}
+````
+
+# (2) Faire un GET pour récupérer les Pokémons de la BDD
+
+Créons un nouveau controller, `Controllers/PokemonDbController.cs` :
+
+````csharp
+using Microsoft.AspNetCore.Mvc;
+
+namespace PokeAPIPolytech.Controllers;
+
+[ApiController]
+[Route("[controller]")]
+public class PokemonsDbController : ControllerBase
+{
+    private readonly ILogger<PokemonsController> _logger;
+    private readonly IPokemonsDbSources _pokemonsDbSources;
+
+    public PokemonsDbController(
+        ILogger<PokemonsController> logger,
+        IPokemonsDbSources pokemonsDbSources)
+    {
+        _logger = logger;
+        _pokemonsDbSources = pokemonsDbSources;
+    }
+
+    [HttpGet("All")]
+    public IEnumerable<Pokemon> GetAllPokemons()
+    {
+        return _pokemonsDbSources.GetAll();
+    }
+}
+````
+
+Créons le service `Services/IPokemonsDbSources.cs`
+
+````csharp
+public interface IPokemonsDbSources
+{
+    IEnumerable<Pokemon> GetAll();
+}
+````
+
+Puis le service qui l'implémente, `Services/PokemonsDbSources.cs`
+
+````csharp
+public class PokemonsDbSources : IPokemonsDbSources
+{
+    public IEnumerable<Pokemon> GetAll()
+    {
+        throw new NotImplementedException();
+    }
+}
+````
+
+N'oublions pas de le rajouter dans le dictionaire d'injection de dépendances :
+
+`Program.cs`
+
+````csharp
+builder.Services.AddSingleton<IPokemonsSources, PokemonsSources>(); //existant
+builder.Services.AddScoped<IPokemonsDbSources, PokemonsDbSources>();
+````
+
+Le service est prêt, nous pouvons lui injecter notre DbContext et remplir la méthode `GetAll()`
+
+````csharp
+using Microsoft.EntityFrameworkCore;
+
+public class PokemonsDbSources : IPokemonsDbSources
+{
+    private readonly PokemonContext _dbContext;
+
+    public PokemonsDbSources(
+        PokemonContext context
+    )
+    {
+        this._dbContext = context;
+    }
+
+    public IEnumerable<Pokemon> GetAll()
+    {
+        return this._dbContext.Pokemons
+            .FromSql($"SELECT * FROM Pokemons")
+            .ToList();
+    }
+}
+````
+
 

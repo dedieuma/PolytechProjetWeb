@@ -8,4 +8,10 @@ public class PokemonContext : DbContext
     }
 
     public DbSet<Pokemon> Pokemons { get; set; } = default!;
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Pokemon>()
+            .HasData(PokemonsSources.Pokemons);
+    }
 }

@@ -1,6 +1,6 @@
 public class PokemonsSources : IPokemonsSources
 {
-    private List<Pokemon> pokemons = new List<Pokemon>
+    public static List<Pokemon> Pokemons = new List<Pokemon>
     {
         new Pokemon{
             Id = 1,
@@ -27,23 +27,23 @@ public class PokemonsSources : IPokemonsSources
 
     public Pokemon Add(Pokemon pokemon)
     {
-        pokemons.Add(pokemon);
+        Pokemons.Add(pokemon);
         return pokemon;
     }
 
     public void DeletePokemon(int pokemonId)
     {
-        pokemons.RemoveAll(pok => pok.Id == pokemonId);
+        Pokemons.RemoveAll(pok => pok.Id == pokemonId);
     }
 
     public IEnumerable<Pokemon> GetAll()
     {
-        return pokemons;
+        return Pokemons;
     }
 
     public Pokemon? Update(int pokemonId, Pokemon pokemon)
     {
-        var retrivedPokemon = pokemons.FirstOrDefault(pok => pok.Id == pokemonId);
+        var retrivedPokemon = Pokemons.FirstOrDefault(pok => pok.Id == pokemonId);
 
         if (retrivedPokemon == null){
             return null;

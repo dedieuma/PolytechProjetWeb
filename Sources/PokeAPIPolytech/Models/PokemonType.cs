@@ -1,5 +1,6 @@
-public enum PokemonType{
-    
+public enum PokemonType
+{
+
     Normal,
     Fighting,
     Flying,

@@ -14,9 +14,10 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContext<PokemonContext>(options => options.UseSqlite("pokemons.db"));
+builder.Services.AddDbContext<PokemonContext>(options => options.UseSqlite("Data Source=pokemons.db"));
 
 builder.Services.AddSingleton<IPokemonsSources, PokemonsSources>();
+builder.Services.AddScoped<IPokemonsDbSources, PokemonsDbSources>();
 builder.Services.AddScoped<IPokeApi, PokeApi>();
 
 builder.Services.AddHttpClient();
