@@ -166,4 +166,27 @@ public class PokemonsDbSources : IPokemonsDbSources
 }
 ````
 
+Lancez le service, et tentez de faire un `GetAll()` avec le bon controller.
+
+Vous devriez avoir une erreur : 
+
+````
+Microsoft.Data.Sqlite.SqliteException (0x80004005): SQLite Error 1: 'no such table: Pokemons'.
+   at Microsoft.Data.Sqlite.SqliteException.ThrowExceptionForRC(Int32 rc, sqlite3 db)
+
+   ....
+````
+
+> ⚠️ Effectivement, il manque quelque chose... La base de donnée n'a pas été définie : toutes les commandes chiantes du style '`CREATE TABLE Pokemons`'... Pour le moment, nous n'avons que défini le lien EF Core entre la table SQL Pokemon et la classe .NET Pokemon... mais si la table n'existe pas nous n'allons pas aller loin.
+
+## (3) Migration de la Base de donnée
+
+EF Core vient avec un module dit de **migration** : il permet de faire évoluer le schéma de la base de donnée au cours du temps et du dévelopement.
+
+De la même manière que nous avions défini comment doit être le lien entre classe .NET et SQL pour pouvoir faire des queries, EF Core permet de générer automatiquement le code permettant de définir le schéma d'une base de donnée, et de la faire évoluer dans le temps.
+
+Tout d'abord, ajoutons un package nécessaire
+
+`dotnet add package Microsoft.EntityFrameworkCore.Design`
+
 
