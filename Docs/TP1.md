@@ -305,6 +305,25 @@ Accédez à l'url indiquée. Cela aboutit sur une page vierge, il faut rajouter 
 
 > Si quelque chose ne fonctionne pas, essayez de faire `dotnet dev-certs https --check --trust`
 
+> Si ce n'est toujours pas fonctionnel, ajoutez un fichier `Properties/launchnSettings.json` : 
+
+````json
+{
+    "profiles": {
+      "Console": {
+        "commandName": "Project",
+        "dotnetRunMessages": true,
+        "launchBrowser": true,
+        "applicationUrl": "https://localhost:5001;http://localhost:5000",
+        "environmentVariables": {
+          "ASPNETCORE_ENVIRONMENT": "Development"
+        }
+      }
+    }
+}
+````
+> Puis relancez l'appli. 
+
 Une page particulière s'affiche : c'est une page Swagger (aussi appelée OpenAPI)
 
 > 💡 Swagger est un format normé qui définit, via un JSON, une page permettant d'interagir avec un serveur exposant des endpoint HTTP Rest. Cela n'a pas lié à dotnet, un Json Swagger peut être exporté et utilisé par d'autres langages.
