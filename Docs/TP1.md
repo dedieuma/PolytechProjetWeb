@@ -1,32 +1,31 @@
 # TP 1
 
-## Objectifs : 
+## Objectifs
 
 - Créer un projet dotnet Console
 - S'assurer que le template de base fonctionne
 - Découvrir la syntaxe dotnet
 - Créer un projet WebAPI
 
-
 ## (1) Créer un projet Console
 
-Ouvrez Vs Code, placez vous dans un nouveau dossier avec le terminal, entrez la commande
+Ouvrez VS Code, placez-vous dans un nouveau dossier avec le terminal, entrez la commande
 
 `dotnet new console -n "<nom-du-projet>"` en remplacant `<nom-du-projet>` par votre choix.
 
 > 💡 Cela crée un nouveau projet dotnet basé sur un template prédéfini de type console.
 
-Un seul fichier nous intéresse : Program.cs, qui ne possède qu'une seule ligne.
+Un seul fichier nous intéresse : `Program.cs`, qui ne possède qu'une seule ligne.
 
 Allez à la racine du projet, assurez vous que le Hello World fonctionne avec la commande `dotnet run`
 
 > Cela devrait afficher Hello, World !
 
-> 💡 dotnet run effectue au préalable deux autres commandes, si elles n'ont pas été faites avant : `dotnet restore` pour résoudre les librairies externes (équivalent `npm install`), et `dotnet build` pour compiler le projet.
+> 💡 `dotnet run` effectue au préalable deux autres commandes, si elles n'ont pas été faites avant : `dotnet restore` pour résoudre les librairies externes (équivalent `npm install`), et `dotnet build` pour compiler le projet.
 
 > ❗ Le projet n'a pas de méthode main ?
 
-> 💡 La syntaxe du Program.cs est une façon moderne de créer un projet console. Beaucoup de code a été caché par les mainteneurs du Projet dotnet. Il y a bien une méthode Main() en arrière-plan, mais elle nous est cachée. Le but était d'aider les nouveaux développeurs, pour qu'ils soient moins perdus lorsqu'ils débutaient avec du code nécessaire pour faire tourner l'appli.
+> 💡 La syntaxe du `Program.cs` est une façon moderne de créer un projet console. Beaucoup de code a été caché par les mainteneurs du Projet dotnet. Il y a bien une méthode `Main()` en arrière-plan, mais elle nous est cachée. Le but était d'aider les nouveaux développeurs, pour qu'ils soient moins perdus lorsqu'ils débutaient avec du code nécessaire pour faire tourner l'application.
 
 ---
 
@@ -37,7 +36,8 @@ Nous allons créer des formes géométriques, sur lesquelles nous allons calcule
 Créez un nouveau fichier `IShape.cs`, collez le code :
 
 ````csharp
-public interface IShape{
+public interface IShape 
+{
 
     double GetPerimeter();
 
@@ -47,10 +47,11 @@ public interface IShape{
 
 **Q1 : qu'est-ce qu'une interface dans un langage haut niveau ?**
 
-Créez un fichier Rectangle.cs :
+Créez un fichier `Rectangle.cs` :
 
 ````csharp
-public class Rectangle : IShape{
+public class Rectangle : IShape 
+{
     
 }
 ````
@@ -74,7 +75,7 @@ public class Rectangle : IShape
 }
 ````
 
-Dans Program.cs, tapez : 
+Dans `Program.cs`, tapez :
 
 ````csharp
 Rectangle rectangle = new Rectangle();
@@ -84,7 +85,7 @@ Console.WriteLine(rectangle.GetPerimeter());
 
 et faites un dotnet run.
 
-La méthode GetPerimeter() jetant une exception, c'est ce qu'on a en sortie console...
+La méthode `GetPerimeter()` jetant une exception, c'est ce qu'on a en sortie console...
 
 > ❗ Mais il n'y a pas de constructeur dans Rectangle ? Comment peut-ont faire un `Rectangle rectangle = new Rectangle();` ?
 
@@ -116,7 +117,7 @@ public class Rectangle : IShape
 }
 ````
 
-Mettez à jour Program.cs, qui doit s'afficher en rouge à présent...
+Mettez à jour `Program.cs`, qui doit s'afficher en rouge à présent...
 
 ````csharp
 Rectangle rectangle = new Rectangle(10, 20);
@@ -124,7 +125,7 @@ Rectangle rectangle = new Rectangle(10, 20);
 Console.WriteLine(rectangle.GetPerimeter());
 ````
 
-> 💡 `{ get; set; }` après les paramètres est du sucre syntaxique. Cela initialize des getters et setters sur ces paramètres. Essayez dans le program.cs, après `Rectangle rectangle = new Rectangle(10, 20);` de faire `rectangle.Longueur = 30;`. Essayez ensuite de supprimer le `set;` derrière Longueur dans Rectangle.cs...
+> 💡 `{ get; set; }` après les paramètres est du sucre syntaxique. Cela initialize des getters et setters sur ces paramètres. Essayez dans le `Program.cs`, après `Rectangle rectangle = new Rectangle(10, 20);` de faire `rectangle.Longueur = 30;`. Essayez ensuite de supprimer le `set;` derrière Longueur dans Rectangle.cs...
 
 **Remplissez à présent GetArea() et GetPerimeter() !**
 
@@ -158,11 +159,11 @@ public class Square : IShape
 
 Remplissez à nouveau les méthodes.
 
-> 💡 Rectangle et Square sont tous les deux des formes avec des côtés, ne pourrons-nous pas simplifier les choses ?
+> 💡 Rectangle et Square sont tous les deux des formes avec des côtés, ne pourrions-nous pas simplifier les choses ?
 
 On pourrait donner un comportement par défaut aux formes qui sont de type 'côté'...
 
-Nous allons créer une classe abstraite, AShapeSide.cs : 
+Nous allons créer une classe abstraite, AShapeSide.cs :
 
 ````csharp
 public abstract class AShapeSide : IShape
@@ -278,14 +279,16 @@ Placez votre terminal dans un nouveau dossier, et effectuez la commande
 
 Cela crée un certain nombre de fichiers, suivant le template du type webapi.
 
-Les fichiers les plus intéressants sont : 
-- Program.cs, équivalent de la méthode main
-- WeatherForcast.cs, classe générée, qui contient les informations définissant une météo à une date => On appelle cela un Model.
-- Controllers/WeatherForecastController.cs : classe particulière permettant d'exposer des endpoint HTTP API Rest.
+Les fichiers les plus intéressants sont :
+
+- `Program.cs`, équivalent de la méthode main
+- `WeatherForecast.cs`, classe générée, qui contient les informations définissant une météo à une date => On appelle cela un `Model`.
+- `Controllers/WeatherForecastController.cs` : classe particulière permettant d'exposer des endpoints HTTP API Rest.
 
 Faites un `dotnet run`
 
-Vous devriez avoir une stack du type 
+Vous devriez avoir une stack du type
+
 ````
 dotnet run
 Génération...
@@ -306,9 +309,9 @@ Une page particulière s'affiche : c'est une page Swagger (aussi appelée OpenAP
 
 > 💡 Swagger est un format normé qui définit, via un JSON, une page permettant d'interagir avec un serveur exposant des endpoint HTTP Rest. Cela n'a pas lié à dotnet, un Json Swagger peut être exporté et utilisé par d'autres langages.
 
-> 💡 dotnet n'expose pas par défaut un Swagger, ceci est fait via des commandes dans le Program.cs, comme par exemple `builder.Services.AddSwaggerGen();` ou `    app.UseSwagger();app.UseSwaggerUI();` Grâce à ces directives, dotnet va rechercher des endpoint HTTP dans le projet, et générer le JSON Swagger à partir de ceux-ci, et exposer le tout sous l'url /swagger.
+> 💡 dotnet n'expose pas par défaut un Swagger, ceci est fait via des commandes dans le `Program.cs`, comme par exemple `builder.Services.AddSwaggerGen();` ou `app.UseSwagger();app.UseSwaggerUI();` Grâce à ces directives, dotnet va rechercher des endpoint HTTP dans le projet, et générer le JSON Swagger à partir de ceux-ci, et exposer le tout sous l'url /swagger.
 
-La page est interagissable : essayez de cliquer sur le bouton bleu GET /WeatherForecast. Cliquez sur le bouton TryItOut, puis Execute : une requête HTTP GET sur http://localhost:XXXX/WeatherForecast est effectué, et envoie une réponse avec le code 200 et un body.
+La page est interagissable : essayez de cliquer sur le bouton bleu GET /WeatherForecast. Cliquez sur le bouton `TryItOut`, puis `Execute` : une requête HTTP GET sur <http://localhost:XXXX/WeatherForecast> est effectué, et envoie une réponse avec le code 200 et un body.
 
 **Q3 : Que fait un verbe Http GET ? En existe-il d'autres ?**
 
@@ -316,10 +319,10 @@ La page est interagissable : essayez de cliquer sur le bouton bleu GET /WeatherF
 
 Nous nous baserons sur ce projet pour le prochain TP.
 
-
 **Le minimum du travail à faire sur ce TP est effectué, les prochaines étapes sont destinés à ceux qui sont chauds du dotnet 😉**
 
 ---
+
 ## (4) [A partir de maintenant : Bonus] Créez une nouvelle forme
 
 Reprenez le projet Console. Suivant le Rectangle et le carré, pouvez-vous ajouter d'autres formes ? Cercle, Triangle...
@@ -327,12 +330,14 @@ Reprenez le projet Console. Suivant le Rectangle et le carré, pouvez-vous ajout
 **Q5 : Copiez le code des classes que vous ferez dans la feuille de réponse**
 
 ---
+
 ## (5) Linq
 
 Copiez
 
 ````csharp
-var list = new List<IShape>{
+var list = new List<IShape>
+{
 
     new Rectangle(3, 2),
     new Square(5),
@@ -342,12 +347,14 @@ var list = new List<IShape>{
 ````
 
 Utilisez Linq pour savoir :
-- Quels sont les formes où la longueur est un multiple de 5
+
+- Quelles sont les formes où la longueur est un multiple de 5
 - Sur ces formes, faites l'addition de leurs périmètres, et affichez le dans la Console.
 
-> Linq est une bibliothèque dotnet permettant de faire des opérations sur les énumérations. Il s'utilise de cette manière : `maListe.MonOpérationLinq()`. Consultez https://www.tutorialsteacher.com/linq
+> Linq est une bibliothèque dotnet permettant de faire des opérations sur les énumérations. Il s'utilise de cette manière : `maListe.MonOpérationLinq()`. Consultez <https://www.tutorialsteacher.com/linq>
 
 ---
+
 ## (6) Afficher les formes dans la Console
 
 Ajoutez une méthode `Print()` dans `IShape`
