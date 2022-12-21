@@ -303,9 +303,9 @@ info: Microsoft.Hosting.Lifetime[0]
 
 Accédez à l'url indiquée. Cela aboutit sur une page vierge, il faut rajouter `/swagger` derrière l'url. Exemple : `http://localhost:XXXX/swagger`
 
-> Si quelque chose ne fonctionne pas, essayez de faire `dotnet dev-certs https --check --trust`
+> ⚠️ Si quelque chose ne fonctionne pas, essayez de faire `dotnet dev-certs https --check --trust`
 
-> Si ce n'est toujours pas fonctionnel, ajoutez un fichier `Properties/launchnSettings.json` : 
+> ⚠️ Si ce n'est toujours pas fonctionnel, ajoutez un fichier `Properties/launchnSettings.json` : 
 
 ````json
 {
@@ -324,6 +324,8 @@ Accédez à l'url indiquée. Cela aboutit sur une page vierge, il faut rajouter 
 ````
 > Puis relancez l'appli. 
 
+> ⚠️ Attention si vous utilisez Google Chrome : par défaut, le navigateur redirige automatiquement vers `https://` si vous tentez d'entrer `http://`. Une solution facile de contournement est de se mettre en navigation privée.
+
 Une page particulière s'affiche : c'est une page Swagger (aussi appelée OpenAPI)
 
 > 💡 Swagger est un format normé qui définit, via un JSON, une page permettant d'interagir avec un serveur exposant des endpoint HTTP Rest. Cela n'a pas lié à dotnet, un Json Swagger peut être exporté et utilisé par d'autres langages.
@@ -331,6 +333,33 @@ Une page particulière s'affiche : c'est une page Swagger (aussi appelée OpenAP
 > 💡 dotnet n'expose pas par défaut un Swagger, ceci est fait via des commandes dans le `Program.cs`, comme par exemple `builder.Services.AddSwaggerGen();` ou `app.UseSwagger();app.UseSwaggerUI();` Grâce à ces directives, dotnet va rechercher des endpoint HTTP dans le projet, et générer le JSON Swagger à partir de ceux-ci, et exposer le tout sous l'url /swagger.
 
 La page est interagissable : essayez de cliquer sur le bouton bleu GET /WeatherForecast. Cliquez sur le bouton `TryItOut`, puis `Execute` : une requête HTTP GET sur <http://localhost:XXXX/WeatherForecast> est effectué, et envoie une réponse avec le code 200 et un body.
+
+> ⚠️ Si vous avez une erreur `Failed to fetch. Possible Reasons : CORS`, il va falloir modifier le fichier `Program.cs`, puis relancer l'appli :
+
+````csharp
+builder.Services.AddEndpointsApiExplorer(); //existant
+builder.Services.AddSwaggerGen(); //existant
+
+builder.Services.AddCors(); // à rajouter
+
+var app = builder.Build();
+
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+// à rajouter
+app.UseCors(
+    options => options
+        .AllowAnyOrigin()
+        .AllowAnyHeader()
+        .AllowAnyMethod() // NON RECOMMANDE : ce n'est absolument pas sécurisé
+);
+
+````
 
 **Q3 : Que fait un verbe Http GET ? En existe-il d'autres ?**
 
