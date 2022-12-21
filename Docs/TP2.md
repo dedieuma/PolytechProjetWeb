@@ -64,7 +64,7 @@ public enum PokemonType
 }
 ````
 
-> 💡 Un `enum` est, pour simplifier, une liste de constantes définies sous un seul et même type. **En dotnet :** c'est une extension du type primitif `int`
+> 💡 Un `enum` est, pour simplifier, une liste de constantes définies sous un seul et même type. **En dotnet :** c'est aussi une extension du type primitif `int`
 
 ---
 
@@ -166,7 +166,7 @@ public IActionResult GetPokemonById(int id)
 }
 ````
 
-**Q8 : que se passe-t-il à présent lorsque l'on met un ID invalide ?**
+**Q8 : que se passe-t-il à présent lorsque l'on met un ID invalide ? Pourquoi renvoyons nous ce Status Code en particulier ?**
 
 ---
 
@@ -350,7 +350,7 @@ Bravo, vous avez implémenté votre premier CRUD !
 
 ---
 
-## (7) [A partir de maintenant : Bonus] Changement de la définition d'un pokemon
+## (7) Changement de la définition d'un pokemon
 
 Modifiez la définition d'un pokemon en rajoutant/modifiant ce que vous voulez. Mettez à jour le controlleur.
 

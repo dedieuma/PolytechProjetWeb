@@ -125,7 +125,7 @@ Rectangle rectangle = new Rectangle(10, 20);
 Console.WriteLine(rectangle.GetPerimeter());
 ````
 
-> 💡 `{ get; set; }` initialize des getters et setters sur ces paramètres. Essayez dans le `Program.cs`, après `Rectangle rectangle = new Rectangle(10, 20);` de faire `rectangle.Longueur = 30;`. Essayez ensuite de supprimer le `set;` derrière Longueur dans Rectangle.cs...
+> 💡 `{ get; set; }` après les paramètres est du sucre syntaxique. Cela initialize des getters et setters sur ces paramètres. Essayez dans le `Program.cs`, après `Rectangle rectangle = new Rectangle(10, 20);` de faire `rectangle.Longueur = 30;`. Essayez ensuite de supprimer le `set;` derrière Longueur dans Rectangle.cs...
 
 **Remplissez à présent GetArea() et GetPerimeter() !**
 
