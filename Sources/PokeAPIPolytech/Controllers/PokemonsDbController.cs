@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Models;
 
 namespace PokeAPIPolytech.Controllers;
 
@@ -19,16 +20,16 @@ public class PokemonsDbController : ControllerBase
         _pokemonsDbSources = pokemonsDbSources;
     }
 
-    [HttpGet("All")]
+    [HttpGet("Pokemons/All")]
     public IEnumerable<Pokemon> GetAllPokemons()
     {
         return _pokemonsDbSources.GetAll();
     }
 
-    [HttpGet("{id}")]
-    public ActionResult<Pokemon> GetPokemonById(int id)
+    [HttpGet("Pokemons/{name}")]
+    public ActionResult<Pokemon> GetPokemonByName(string name)
     {
-        var pokemon = _pokemonsDbSources.GetById(id);
+        var pokemon = _pokemonsDbSources.GetByName(name);
 
         if (pokemon == null)
         {
@@ -36,6 +37,12 @@ public class PokemonsDbController : ControllerBase
         }
 
         return Ok(pokemon);
+    }
+
+    [HttpGet("Abilities/All")]
+    public IEnumerable<Ability> GetAllAbilities()
+    {
+        return _pokemonsDbSources.GetAllAbilities();
     }
 
     [HttpPost]

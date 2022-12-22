@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Models;
 
 public class PokemonsDbSources : IPokemonsDbSources
 {
@@ -18,9 +19,16 @@ public class PokemonsDbSources : IPokemonsDbSources
             .ToList();
     }
 
-    public Pokemon GetById(int id)
+    public IEnumerable<Ability> GetAllAbilities()
     {
-        var query = "SELECT * FROM Pokemons WHERE Id = "+id;
+        return this._dbContext.Abilities
+            .FromSqlRaw($"SELECT * FROM Abilities")
+            .ToList();
+    }
+
+    public Pokemon GetByName(string name)
+    {
+        var query = "SELECT * FROM Pokemons WHERE Name = '"+name+"'";
 
         return this._dbContext.Pokemons
             .FromSqlRaw(query)

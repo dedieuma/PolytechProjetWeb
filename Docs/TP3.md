@@ -278,16 +278,16 @@ public Pokemon Insert(CreatePokemonDto dto)
 
 Testez pour voir si ça fonctionne.
 
-## (5) Récupérer un pokémon par id
+## (5) Récupérer un pokémon par nom
 
-Créez un nouvel endpoint dans `PokemonsDbController.cs`, qui permettra de récupérer un pokémon par Id.
+Créez un nouvel endpoint dans `PokemonsDbController.cs`, qui permettra de récupérer un pokémon par nom.
 
 Puis dans `PokemonsDbSources.cs` : 
 
 ````csharp
-public Pokemon GetById(int id)
+public Pokemon GetByName(string name)
 {
-    var query = "SELECT * FROM Pokemons WHERE Id = "+id;
+    var query = "SELECT * FROM Pokemons WHERE Name = '"+name+"'";
 
     return this._dbContext.Pokemons
         .FromSqlRaw(query)
@@ -354,6 +354,40 @@ Ptit `dotnet ef migrations add "Abilities"` into `dotnet ef database update`
 
 (N'hésitez pas à aller voir du côté de la migration créée...)
 
+## (7) GET Abilities
+
+Créez une méthode GET pour récupérer toutes les Abilities de la base de donnée
+
+> 💡 Il est judicieux de modifier les méthodes GET existantes, par exemple de `[HttpGet("All")]` vers `[HttpGet("Pokemons/All")]`
+
+> Vous avez probablement `null` en résultat sur la liste des pokémons, nous allons nous en occuper plus tard...
+
+## (8) Et si on tentait un truc
+
+Lancez votre service.
+
+Sur l'endpoint permettant de récupérer un pokémon par nom, dans le champ demandé par swagger, au lieu de mettre votre nom ciblé, mettez plutôt
+
+`Bulbasaur';drop table Abilities--`
+
+Maintenant, refaites en Get All Abilities.
+
+**Que s'est-t'il passé ?**
+
+Pour réparer, allez dans le fichier de migration `[date]_Abilities.cs`, commentez la ligne 
+
+````csharp
+            migrationBuilder.DropTable(
+                name: "Abilities");
+````
+
+Effectuez
+
+> `dotnet ef database update "Initial"`
+
+Décommentez la ligne, puis
+
+> `dotnet ef database update`
 
 ---
 > ☠️ Comme nous avons pu le constater, EF Core est un outil puissant. Il mâche beaucoup le travail de modélisation de la base de donnée, les débutants en modélisation peuvent facilement le manipuler pour créer une base de donnée relationelle. 

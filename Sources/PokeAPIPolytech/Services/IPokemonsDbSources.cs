@@ -1,6 +1,9 @@
+using Models;
+
 public interface IPokemonsDbSources
 {
     IEnumerable<Pokemon> GetAll();
-    Pokemon GetById(int id);
+    IEnumerable<Ability> GetAllAbilities();
+    Pokemon GetByName(string name);
     Pokemon Insert(CreatePokemonDto dto);
 }
