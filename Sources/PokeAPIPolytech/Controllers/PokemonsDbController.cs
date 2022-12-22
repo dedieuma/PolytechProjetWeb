@@ -24,4 +24,30 @@ public class PokemonsDbController : ControllerBase
     {
         return _pokemonsDbSources.GetAll();
     }
+
+    [HttpGet("{id}")]
+    public ActionResult<Pokemon> GetPokemonById(int id)
+    {
+        var pokemon = _pokemonsDbSources.GetById(id);
+
+        if (pokemon == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(pokemon);
+    }
+
+    [HttpPost]
+    public ActionResult<Pokemon> InsertPokemon(CreatePokemonDto dto)
+    {
+        if (_pokemonsDbSources.GetAll().Any(pokemon => pokemon.Id == dto.Id))
+        {
+            return BadRequest();
+        }
+
+        var pokemon = _pokemonsDbSources.Insert(dto);
+
+        return Ok(pokemon);
+    }
 }

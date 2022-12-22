@@ -169,7 +169,7 @@ public class PokemonsDbSources : IPokemonsDbSources
     public IEnumerable<Pokemon> GetAll()
     {
         return this._dbContext.Pokemons
-            .FromSql($"SELECT * FROM Pokemons")
+            .FromSqlRaw($"SELECT * FROM Pokemons")
             .ToList();
     }
 }
@@ -245,3 +245,54 @@ Vous avez peut être remarqué la création d'un nouveau fichier : `pokemons.db`
 > 💡 En temps normal, un projet professionnel utilise un vrai moteur de base de donnée, mais c'est complexe à mettre en place dans le cadre des TP Polytech.
 
 Réessayez de relancer le service, et de requêter des nouveaux pokémons : cela devrait fonctionner !
+
+## (4) Insérer un nouveau pokémon en Base de donnée
+
+Créez un nouvel endpoint avec le verbe POST dans `PokemonsDbController.cs`
+
+Faites en sorte qu'il appelle la méthode `Insert()` de `PokemonsDbSources.cs`
+
+`PokemonsDbSources.cs` : 
+
+````csharp
+public Pokemon Insert(CreatePokemonDto dto)
+{
+    var pokemon = new Pokemon
+    {
+        Id = dto.Id,
+        Name = dto.Name,
+        Description = dto.Description,
+        PictureUrl = dto.PictureUrl,
+        Type = dto.Type
+    };
+
+    var query = "INSERT INTO Pokemons (Id, Description, Name, PictureUrl, Type) VALUES ('"+pokemon.Id+"', '"+pokemon.Description+"', '"+pokemon.Name+"', '"+pokemon.PictureUrl+"', '"+pokemon.PictureUrl+"')";
+
+    this._dbContext.Pokemons
+        .FromSqlRaw(query)
+        .ToList();
+
+    return pokemon;
+}
+````
+
+Testez pour voir si ça fonctionne.
+
+## (5) Récupérer un pokémon par id
+
+Créez un nouvel endpoint dans `PokemonsDbController.cs`, qui permettra de récupérer un pokémon par Id.
+
+Puis dans `PokemonsDbSources.cs` : 
+
+````csharp
+public Pokemon GetById(int id)
+{
+    var query = "SELECT * FROM Pokemons WHERE Id = "+id;
+
+    return this._dbContext.Pokemons
+        .FromSqlRaw(query)
+        .ToList()
+        .FirstOrDefault();
+}
+````
+
