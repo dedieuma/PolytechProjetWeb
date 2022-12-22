@@ -296,3 +296,66 @@ public Pokemon GetById(int id)
 }
 ````
 
+## (6) Relation Many to Many
+
+Un pokémon possède une liste d'attaques.
+Une attaque peut être apprise par plusieurs pokémons différents.
+
+Nous sommes dans le cas d'une relation many-to-many (ou N-to-N). Nous pouvons définir cette relation dans EF Core, et une migration fera le reste dans le schéma de la base de donnée.
+
+Créons une nouvelle entité, `Models/Ability.cs`
+
+````csharp
+namespace Models;
+
+public class Ability
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+
+    public virtual ICollection<Pokemon> Pokemons { get; set; }
+}
+````
+
+Ajoutons une ligne dans `Pokemons.cs`
+
+````csharp
+    public virtual ICollection<Ability> Abilities { get; set; }
+````
+
+Rajoutons un DbSet dans `PokemonContext.cs`
+
+````csharp
+    public DbSet<Ability> Abilities { get; set; } = default!;
+````
+
+Ajoutez dans le `OnModelCreating()`
+
+````csharp
+var dataAbilities = new List<Ability>{
+    new Ability{
+        Id = 1,
+        Name = "shield-dust"
+    }
+};
+
+modelBuilder.Entity<Ability>()
+    .HasData(dataAbilities);
+
+modelBuilder.Entity<Pokemon>()
+    .HasMany(pokemon => pokemon.Abilities)
+    .WithMany(ab => ab.Pokemons)
+    .UsingEntity(abPok => abPok.HasData(new { PokemonsId = 10, AbilitiesId = 1 }));
+           
+````
+> 💡 Cela ajoute la compétence "shield-dust" au pokémon "Caterpie"
+
+Ptit `dotnet ef migrations add "Abilities"` into `dotnet ef database update`
+
+(N'hésitez pas à aller voir du côté de la migration créée...)
+
+
+---
+> ☠️ Comme nous avons pu le constater, EF Core est un outil puissant. Il mâche beaucoup le travail de modélisation de la base de donnée, les débutants en modélisation peuvent facilement le manipuler pour créer une base de donnée relationelle. 
+
+> Cependant, il est important dans le travail d'un ingénieur de comprendre ce que l'outil fait et crée. Nous avons la responsabilité de la création du schéma de la base, si quelque chose fonctionne mal c'est de notre ressort d'analyser et de trouver la réponse au problème. Chose impossible à faire si nous n'avons pas les notions de modélisation de base de donnée.

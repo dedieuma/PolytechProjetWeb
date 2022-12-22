@@ -1,3 +1,5 @@
+using Models;
+
 public class Pokemon{
 
     public int Id { get; set; }
@@ -5,5 +7,7 @@ public class Pokemon{
     public PokemonType Type { get; set; } 
     public string Description { get; set; } = string.Empty;
     public string PictureUrl { get; set; } = string.Empty;
+
+    public virtual ICollection<Ability> Abilities { get; set; }
 
 }

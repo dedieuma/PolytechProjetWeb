@@ -1,5 +1,6 @@
 
 using Microsoft.EntityFrameworkCore;
+using Models;
 
 public class PokemonContext : DbContext
 {
@@ -9,9 +10,11 @@ public class PokemonContext : DbContext
 
     public DbSet<Pokemon> Pokemons { get; set; } = default!;
 
+    public DbSet<Ability> Abilities { get; set; } = default!;
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        var data = PokemonsSources.Pokemons.Append(new Pokemon
+        var dataPokemon = PokemonsSources.Pokemons.Append(new Pokemon
         {
             Id = 10,
             Name = "Caterpie",
@@ -21,6 +24,22 @@ public class PokemonContext : DbContext
         });
 
         modelBuilder.Entity<Pokemon>()
-            .HasData(data);
+            .HasData(dataPokemon);
+
+        var dataAbilities = new List<Ability>{
+            new Ability{
+                Id = 1,
+                Name = "shield-dust"
+            }
+        };
+
+        modelBuilder.Entity<Ability>()
+            .HasData(dataAbilities);
+
+        modelBuilder.Entity<Pokemon>()
+            .HasMany(pokemon => pokemon.Abilities)
+            .WithMany(ab => ab.Pokemons)
+            .UsingEntity(abPok => abPok.HasData(new { PokemonsId = 10, AbilitiesId = 1 }));
+            
     }
 }

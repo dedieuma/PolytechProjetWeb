@@ -1,3 +1,4 @@
+namespace Dtos;
 
 using Newtonsoft.Json;
 

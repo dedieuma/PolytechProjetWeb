@@ -1,3 +1,5 @@
+using Dtos;
+
 public class PokeApi : IPokeApi
 {
     private readonly HttpClient _client;
