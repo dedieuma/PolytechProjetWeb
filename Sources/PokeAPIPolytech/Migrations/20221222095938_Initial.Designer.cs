@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace PokeAPIPolytech.Migrations
 {
     [DbContext(typeof(PokemonContext))]
-    [Migration("20221221160654_Initial")]
+    [Migration("20221222095938_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -25,15 +25,12 @@ namespace PokeAPIPolytech.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("PictureUrl")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Type")
@@ -54,7 +51,7 @@ namespace PokeAPIPolytech.Migrations
                         },
                         new
                         {
-                            Id = 2,
+                            Id = 4,
                             Description = "Obviously prefers hot places. When it rains, steam is said to spout from the tip of its tail.",
                             Name = "Charmander",
                             PictureUrl = "https://img.pokemondb.net/artwork/large/charmander.jpg",
@@ -62,11 +59,19 @@ namespace PokeAPIPolytech.Migrations
                         },
                         new
                         {
-                            Id = 3,
+                            Id = 7,
                             Description = "After birth, its back swells and hardens into a shell. Powerfully sprays foam from its mouth.",
                             Name = "Squirtle",
                             PictureUrl = "https://img.pokemondb.net/artwork/large/squirtle.jpg",
                             Type = 10
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Description = "Its short feet are tipped with suction pads that enable it to tirelessly climb slopes and walls.",
+                            Name = "Caterpie",
+                            PictureUrl = "https://img.pokemondb.net/artwork/large/caterpie.jpg",
+                            Type = 6
                         });
                 });
 #pragma warning restore 612, 618

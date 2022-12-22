@@ -74,8 +74,17 @@ Revenez à `Repositories/PokemonContext.cs`, ajoutez :
 ````csharp
 protected override void OnModelCreating(ModelBuilder modelBuilder)
 {
+        var data = PokemonsSources.Pokemons.Append(new Pokemon
+        {
+            Id = 10,
+            Name = "Caterpie",
+            Description = "Its short feet are tipped with suction pads that enable it to tirelessly climb slopes and walls.",
+            Type = PokemonType.Bug,
+            PictureUrl = "https://img.pokemondb.net/artwork/large/caterpie.jpg"
+        });
+
     modelBuilder.Entity<Pokemon>()
-        .HasData(PokemonsSources.Pokemons);
+        .HasData(data);
 }
 ````
 
@@ -187,6 +196,52 @@ De la même manière que nous avions défini comment doit être le lien entre cl
 
 Tout d'abord, ajoutons un package nécessaire
 
-`dotnet add package Microsoft.EntityFrameworkCore.Design`
+> `dotnet add package Microsoft.EntityFrameworkCore.Design`
 
+Il faut maintenant installer l'outil `dotnet ef` :
 
+> `dotnet tool install --global dotnet-ef`
+
+Vérifiez que l'outil est installé avec 
+
+> `dotnet ef`
+
+Pour créer notre première migration, il faut utiliser la commande
+
+> `dotnet ef migrations add "Initial"`
+
+Regardez dans vos dossiers : un nouveau dossier nommé Migrations a dû être créé.
+
+3 Fichiers sont présents : 
+- [date]_Initial.cs
+- [date]_Initial.Designer.cs
+- PokemonContextModelSnapshot.cs
+
+Les deux derniers fichiers sont des fichiers internes à EF, oubliez les.
+
+En revanche ouvrez le premier fichier : il contient deux méthodes `Up` et `Down`
+
+> 💡 L'idée derrière ces méthodes est de pouvoir avancer ou reculer dans une suite de migrations : mettre à jour une base de donnée depuis le début jusqu'à une migration N va demander à EF d'exécuter toutes les méthodes `Up` jusqu'à la migration N ciblée (incluse).
+> Dans l'autre sens, demander à EF de revenir en arrière vers une migration plus ancienne va éxécuter les commandes `Down`.
+
+> 💡 Si on regarde dans le détail les méthodes, on voit bien qu'il y a des directives en dotnet `CreateTable` ou `DropTable`, ce qui va nous permettre de faire évoluer le schéma de notre BD !
+
+> ⚠️ Il est fortement conseillé de ne pas toucher directement au code des fichiers sous le dossier `Migrations`, mais plutôt d'utiliser l'outil `dotnet ef`. Les fichiers sont du code généré.
+
+On a notre migration, il faut encore l'appliquer à notre BD.
+
+La commande à faire est 
+
+> `dotnet ef database update`
+
+Cela va mettre à jour la BD vers la migration la plus récente.
+
+> 💡 Si on voulait cibler une migration partiulière, la commande aurait été `dotnet ef database update "MaMigration"` (sans la date, juste le nom)
+
+> 💡 Pour cibler la première migration, et en particulier les `Down`, la commande est `dotnet ef database update 0`
+
+Vous avez peut être remarqué la création d'un nouveau fichier : `pokemons.db` à la racine de votre projet. C'est votre base de donnée... Elle n'est pas lisible par un humain mais c'est dedans où les tables et les données sont définies.
+
+> 💡 En temps normal, un projet professionnel utilise un vrai moteur de base de donnée, mais c'est complexe à mettre en place dans le cadre des TP Polytech.
+
+Réessayez de relancer le service, et de requêter des nouveaux pokémons : cela devrait fonctionner !

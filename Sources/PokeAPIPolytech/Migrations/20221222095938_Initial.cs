@@ -18,10 +18,10 @@ namespace PokeAPIPolytech.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", nullable: true),
                     Type = table.Column<int>(type: "INTEGER", nullable: false),
-                    Description = table.Column<string>(type: "TEXT", nullable: false),
-                    PictureUrl = table.Column<string>(type: "TEXT", nullable: false)
+                    Description = table.Column<string>(type: "TEXT", nullable: true),
+                    PictureUrl = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -34,8 +34,9 @@ namespace PokeAPIPolytech.Migrations
                 values: new object[,]
                 {
                     { 1, "A strange seed was planted on its back at birth. The plant sprouts and grows with this POKéMON.", "Bulbasaur", "https://img.pokemondb.net/artwork/large/bulbasaur.jpg", 11 },
-                    { 2, "Obviously prefers hot places. When it rains, steam is said to spout from the tip of its tail.", "Charmander", "https://img.pokemondb.net/artwork/large/charmander.jpg", 9 },
-                    { 3, "After birth, its back swells and hardens into a shell. Powerfully sprays foam from its mouth.", "Squirtle", "https://img.pokemondb.net/artwork/large/squirtle.jpg", 10 }
+                    { 4, "Obviously prefers hot places. When it rains, steam is said to spout from the tip of its tail.", "Charmander", "https://img.pokemondb.net/artwork/large/charmander.jpg", 9 },
+                    { 7, "After birth, its back swells and hardens into a shell. Powerfully sprays foam from its mouth.", "Squirtle", "https://img.pokemondb.net/artwork/large/squirtle.jpg", 10 },
+                    { 10, "Its short feet are tipped with suction pads that enable it to tirelessly climb slopes and walls.", "Caterpie", "https://img.pokemondb.net/artwork/large/caterpie.jpg", 6 }
                 });
         }
 

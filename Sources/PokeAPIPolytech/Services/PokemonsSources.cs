@@ -10,14 +10,14 @@ public class PokemonsSources : IPokemonsSources
             PictureUrl = "https://img.pokemondb.net/artwork/large/bulbasaur.jpg"
         },
             new Pokemon{
-                Id = 2,
+                Id = 4,
                 Name = "Charmander",
                 Description = "Obviously prefers hot places. When it rains, steam is said to spout from the tip of its tail.",
                 Type = PokemonType.Fire,
                 PictureUrl = "https://img.pokemondb.net/artwork/large/charmander.jpg"
         },
             new Pokemon{
-                Id = 3,
+                Id = 7,
                 Name = "Squirtle",
                 Description = "After birth, its back swells and hardens into a shell. Powerfully sprays foam from its mouth.",
                 Type = PokemonType.Water,
@@ -45,7 +45,8 @@ public class PokemonsSources : IPokemonsSources
     {
         var retrivedPokemon = Pokemons.FirstOrDefault(pok => pok.Id == pokemonId);
 
-        if (retrivedPokemon == null){
+        if (retrivedPokemon == null)
+        {
             return null;
         }
 
