@@ -159,9 +159,9 @@ public class Square : IShape
 
 Remplissez à nouveau les méthodes.
 
-> 💡 Rectangle et Square sont tous les deux des formes avec des côtés, ne pourrions-nous pas simplifier les choses ?
+> 💡 Rectangle et Square sont tous les deux des quadrilatères, ne pourrions-nous pas simplifier les choses ?
 
-On pourrait donner un comportement par défaut aux formes qui sont de type 'côté'...
+On pourrait donner un comportement par défaut aux formes qui sont de type 'quadrilatère'...
 
 Nous allons créer une classe abstraite, AShapeSide.cs :
 
@@ -179,7 +179,7 @@ public abstract class AShapeSide : IShape
 
 **Q2 : Qu'est-ce qu'une classe abstraite ? Pourquoi l'éditeur ne devient pas rouge si on met les méthodes venant de IShape comme étant abstract ?**
 
-Mettons à jour Rectangle et Shape...
+Mettons à jour Rectangle et Square...
 
 ````csharp
 public class Rectangle : AShapeSide
@@ -305,7 +305,7 @@ Accédez à l'url indiquée. Cela aboutit sur une page vierge, il faut rajouter 
 
 > ⚠️ Si quelque chose ne fonctionne pas, essayez de faire `dotnet dev-certs https --check --trust`
 
-> ⚠️ Si ce n'est toujours pas fonctionnel, ajoutez un fichier `Properties/launchnSettings.json` : 
+> ⚠️ Si ce n'est toujours pas fonctionnel, ajoutez un fichier `Properties/launchSettings.json` : 
 
 ````json
 {
