@@ -368,7 +368,7 @@ Lancez votre service.
 
 Sur l'endpoint permettant de récupérer un pokémon par nom, dans le champ demandé par swagger, au lieu de mettre votre nom ciblé, mettez plutôt
 
-`Bulbasaur';drop table Abilities--`
+> `Bulbasaur';drop table Abilities--`
 
 Maintenant, refaites en Get All Abilities.
 
@@ -388,6 +388,52 @@ Effectuez
 Décommentez la ligne, puis
 
 > `dotnet ef database update`
+
+## (9) Utilisation de Linq-to-SQL au lieu de SQL brut
+
+Jusqu'à présent, nous avons effectué des requêtes SQL Pur pour faire nos manipulations. 
+
+Non seulement c'est laborieux à écrire, mais c'est aussi soumis à des bugs et des failles de sécurité catastrophiques.
+
+Heuresement, EF Core est encore là pour nous (que ferions-nous sans lui ?). 
+
+EF Core propose ce que l'on appelle des projections "Linq To SQL". Le principe est d'utiliser des directives Linq sur notre DbContext pour faire nos query SQL. EF Core se chargera de convertir la directive Linq en requête SQL, nous enlevant la charge de rédiger du SQL.
+
+> 💡 Linq ('Link' ou 'Lin-kiou') est une librairie officielle permettant de manipuler des listes au sens large. Or, un résultat d'une query SQL reste une sorte de liste (nom officiel : `IQueryable`) : une requête `SELECT` renvoie une liste de lignes d'une table.
+
+> 💡 Il s'utilise de cette manière : `maListe.MonOpérationLinq()`. Consultez <https://www.tutorialsteacher.com/linq>
+
+> 💡 EF Core contient des providers Linq-To-SQL pour toutes les moteurs de base de donnée populaires. Aussi, il propose des providers pour des bases de données non-relationnelles. Ainsi, vous pouvez aussi utiliser EF Core pour manipuler des collections Mongo, par exemple.
+
+Nous allons réécrire nos query SQL brut en Linq-to-SQL.
+
+> Si vous le souhaitez, vous pouvez renommer les méthodes actuelles en autre chose, si vous voulez garder l'ancienne version.
+
+`PokemonsDbSources.cs` : 
+
+````csharp
+public IEnumerable<Pokemon> GetAll()
+{
+    return this._dbContext.Pokemons
+        .ToList();
+}
+
+public IEnumerable<Ability> GetAllAbilities()
+{
+    return this._dbContext.Abilities
+        .ToList();
+}
+
+public Pokemon GetByName(string name)
+{
+    return this._dbContext.Pokemons
+        .FirstOrDefault(pokemon => pokemon.Name.Equals(name));
+}
+````
+
+... c'est tout pour les `SELECT` !
+
+Si vous 
 
 ---
 > ☠️ Comme nous avons pu le constater, EF Core est un outil puissant. Il mâche beaucoup le travail de modélisation de la base de donnée, les débutants en modélisation peuvent facilement le manipuler pour créer une base de donnée relationelle. 

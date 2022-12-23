@@ -399,7 +399,7 @@ Utilisez Linq pour savoir :
 - Quelles sont les formes où la longueur est un multiple de 5
 - Sur ces formes, faites l'addition de leurs périmètres, et affichez le dans la Console.
 
-> Linq est une bibliothèque dotnet permettant de faire des opérations sur les énumérations. Il s'utilise de cette manière : `maListe.MonOpérationLinq()`. Consultez <https://www.tutorialsteacher.com/linq>
+> Linq ('Link' ou 'Lin-kiou') est une bibliothèque dotnet permettant de faire des opérations sur les énumérations ou des listes. Il s'utilise de cette manière : `maListe.MonOpérationLinq()`. Consultez <https://www.tutorialsteacher.com/linq>
 
 ---
 

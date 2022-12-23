@@ -15,25 +15,19 @@ public class PokemonsDbSources : IPokemonsDbSources
     public IEnumerable<Pokemon> GetAll()
     {
         return this._dbContext.Pokemons
-            .FromSqlRaw($"SELECT * FROM Pokemons")
             .ToList();
     }
 
     public IEnumerable<Ability> GetAllAbilities()
     {
         return this._dbContext.Abilities
-            .FromSqlRaw($"SELECT * FROM Abilities")
             .ToList();
     }
 
     public Pokemon GetByName(string name)
     {
-        var query = "SELECT * FROM Pokemons WHERE Name = '"+name+"'";
-
         return this._dbContext.Pokemons
-            .FromSqlRaw(query)
-            .ToList()
-            .FirstOrDefault();
+            .FirstOrDefault(pokemon => pokemon.Name.Equals(name));
     }
 
     public Pokemon Insert(CreatePokemonDto dto)
