@@ -15,18 +15,21 @@ public class PokemonsDbSources : IPokemonsDbSources
     public IEnumerable<Pokemon> GetAll()
     {
         return this._dbContext.Pokemons
+            .Include(pokemon => pokemon.Abilities)
             .ToList();
     }
 
     public IEnumerable<Ability> GetAllAbilities()
     {
         return this._dbContext.Abilities
+            .Include(ability => ability.Pokemons)
             .ToList();
     }
 
     public Pokemon GetByName(string name)
     {
         return this._dbContext.Pokemons
+            .Include(pokemon => pokemon.Abilities)
             .FirstOrDefault(pokemon => pokemon.Name.Equals(name));
     }
 

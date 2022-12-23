@@ -57,7 +57,7 @@ public class PokemonContext : DbContext
 
 > 💡 `public DbSet<Pokemon> Pokemons` permet de déclarer à EF Core que notre Model `Pokemon.cs` et ses propriétés doit être mappé à une table SQL, qui aura (par défaut) le nom... Pokemons.
 
-Ajoutons des données à notre Base, via EF Core.
+Ajoutons des données à notre (future) Base, via EF Core.
 
 Tout d'abord, rendons notre liste de Pokémons `static` pour pouvoir y accéder depuis l'extérieur de la classe.
 
@@ -461,7 +461,55 @@ La méthode `this._dbContext.SaveChanges();` est importante, et est en lien avec
 
 C'est un équivalent aux commit des bases de données.
 
-## (10) Implémentez un update et un delete d'un Pokémon sur la Base de donnée
+## (10) Includes
+
+Lors du GetAllPokemons(), la liste des Abilities reste toujours à null.
+
+C'est dû au fait que les entités Pokémons et Abilities se situent dans deux tables SQL différentes... ce qui veut en théorie dire qu'il faut requêter deux fois la base de donnée, une pour la table Pokémon, et une pour la table Abilities. Et c'est sans compter les tables d'associations, qui permettent de faire du Many-to-Many !
+
+C'est pour cela que, par défaut, les requêtes Linq-to-SQL ne vont pas aller chercher les données d'autres tables que celle visée de base. Cependant, on peut indiquer que l'on veut faire un lien avec une autre table.
+
+Modifiions les méthodes : 
+
+````csharp
+public IEnumerable<Pokemon> GetAll()
+{
+    return this._dbContext.Pokemons
+        .Include(pokemon => pokemon.Abilities)
+        .ToList();
+}
+
+public IEnumerable<Ability> GetAllAbilities()
+{
+    return this._dbContext.Abilities
+        .Include(ability => ability.Pokemons)
+        .ToList();
+}
+
+public Pokemon GetByName(string name)
+{
+    return this._dbContext.Pokemons
+        .Include(pokemon => pokemon.Abilities)
+        .FirstOrDefault(pokemon => pokemon.Name.Equals(name));
+}
+````
+
+Ajoutez aussi une ligne dans le `Program.cs`
+
+````csharp
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+});
+````
+
+Démarrez le service. Grâce à la directive `Include()`, EF Core va effectuer des requêtes de liaison sur la Base de donnée. Quelle type de liaison fait EF Core ?
+
+## (11) Implémentez un update et un delete d'un Pokémon sur la Base de donnée
 
 Regardez les méthodes disponibles sur le `_dbContext` pour faire cela, et implémentez aussi des nouveaux endpoints à votre controlleur.
 
@@ -476,7 +524,7 @@ Une fois que c'est fait, vous avez votre CRUD de Pokémon qui est sauvegardé da
 ---
 
 
-## (11) [Bonus étalé sur le TP 2 et TP 3] Se brancher à PokéAPI
+## (12) [Bonus étalé sur le TP 2 et TP 3] Se brancher à PokéAPI
 
 Nous avons défini en local des pokémons. Mais un service Web existe déjà, qui expose tous les pokémons ! Il s'agit de <https://pokeapi.co/>
 
@@ -532,10 +580,10 @@ Utilisez ce dont vous avez vu dans ce TP pour créer un endpoint GET GetByPokemo
 
 > 💡 Vous pouvez vous aider de sites comme <https://json2csharp.com/> pour convertir un fichier JSON en classe dotnet. C'est particulièrement utile pour convertir un résultat d'une requête HTTP (qui est en JSON) en classes typées dotnet.
 
-## (12) Pokémon Favoris
+## (13) Pokémon Favoris
 
 Implémentez une nouvelle entité permettant de mettre en favori des pokémons. Créez un nouveau controlleur et un nouveau service permettant d'ajouter/d'enlever un pokémon des favoris.
 
-## (13) Encore plus ?
+## (14) Encore plus ?
 
 Sujet libre. Ajoutez au service ce que vous voulez, mais pensez à bien mettre des commentaires pour ma compréhension.
