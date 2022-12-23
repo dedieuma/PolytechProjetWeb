@@ -400,7 +400,7 @@ EF Core propose ce que l'on appelle des projections "Linq To SQL". Le principe e
 
 > 💡 Linq ('Link' ou 'Lin-kiou') est une librairie officielle permettant de manipuler des listes au sens large. Or, un résultat d'une query SQL reste une sorte de liste (nom officiel : `IQueryable`) : une requête `SELECT` renvoie une liste de lignes d'une table.
 
-> 💡 Il s'utilise de cette manière : `maListe.MonOpérationLinq()`. Consultez <https://www.tutorialsteacher.com/linq>
+> 💡 Il s'utilise de cette manière : `maListe.MonOpérationLinq()`. Consultez <https://learn.microsoft.com/en-us/dotnet/api/system.linq.enumerable.firstordefault?view=net-7.0>
 
 > 💡 EF Core contient des providers Linq-To-SQL pour toutes les moteurs de base de donnée populaires. Aussi, il propose des providers pour des bases de données non-relationnelles. Ainsi, vous pouvez aussi utiliser EF Core pour manipuler des collections Mongo, par exemple.
 
