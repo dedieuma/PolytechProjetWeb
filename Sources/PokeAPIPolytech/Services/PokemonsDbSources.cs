@@ -41,11 +41,10 @@ public class PokemonsDbSources : IPokemonsDbSources
             Type = dto.Type
         };
 
-        var query = "INSERT INTO Pokemons (Id, Description, Name, PictureUrl, Type) VALUES ('"+pokemon.Id+"', '"+pokemon.Description+"', '"+pokemon.Name+"', '"+pokemon.PictureUrl+"', '"+pokemon.PictureUrl+"')";
-
         this._dbContext.Pokemons
-            .FromSqlRaw(query)
-            .ToList();
+            .Add(pokemon);
+
+        this._dbContext.SaveChanges();
 
         return pokemon;
     }

@@ -433,9 +433,110 @@ public Pokemon GetByName(string name)
 
 ... c'est tout pour les `SELECT` !
 
-Si vous 
+Si vous regardez dans la console lors des appels aux endpoints, on voit quelles sont les requêtes effectuées par EF Core.
+
+Pour la méthode `Insert()`, c'est un peu différent :
+
+````csharp
+public Pokemon Insert(CreatePokemonDto dto)
+{
+    var pokemon = new Pokemon
+    {
+        Id = dto.Id,
+        Name = dto.Name,
+        Description = dto.Description,
+        PictureUrl = dto.PictureUrl,
+        Type = dto.Type
+    };
+
+    this._dbContext.Pokemons
+        .Add(pokemon);
+
+    this._dbContext.SaveChanges();
+
+    return pokemon;
+}
+````
+
+La méthode `this._dbContext.SaveChanges();` est importante, et est en lien avec un paradigme de EF Core. Faire `this._dbContext.Pokemons.Add(pokemon);` marque l'entité `pokemon` comme étant "à ajouter" par EF Core. Tant que `this._dbContext.SaveChanges();` n'est pas appelé, l'entité ne sera pas sauvegardé dans la base.
+
+C'est un équivalent aux commit des bases de données.
+
+## (10) Implémentez un update et un delete d'un Pokémon sur la Base de donnée
+
+Regardez les méthodes disponibles sur le `_dbContext` pour faire cela, et implémentez aussi des nouveaux endpoints à votre controlleur.
+
+Une fois que c'est fait, vous avez votre CRUD de Pokémon qui est sauvegardé dans une Base !
 
 ---
 > ☠️ Comme nous avons pu le constater, EF Core est un outil puissant. Il mâche beaucoup le travail de modélisation de la base de donnée, les débutants en modélisation peuvent facilement le manipuler pour créer une base de donnée relationelle. 
 
 > Cependant, il est important dans le travail d'un ingénieur de comprendre ce que l'outil fait et crée. Nous avons la responsabilité de la création du schéma de la base, si quelque chose fonctionne mal c'est de notre ressort d'analyser et de trouver la réponse au problème. Chose impossible à faire si nous n'avons pas les notions de modélisation de base de donnée.
+
+
+---
+
+
+## (11) [Bonus étalé sur le TP 2 et TP 3] Se brancher à PokéAPI
+
+Nous avons défini en local des pokémons. Mais un service Web existe déjà, qui expose tous les pokémons ! Il s'agit de <https://pokeapi.co/>
+
+Ajoutez un nouveau controller : `PokeApiController.cs`. Et un nouveau service : `PokeApi.cs` (et `IPokeApi.cs`)
+
+````csharp
+using Microsoft.AspNetCore.Mvc;
+
+namespace PokeAPIPolytech.Controllers;
+
+[ApiController]
+[Route("[controller]")]
+public class PokeApiController : ControllerBase
+{
+    private readonly ILogger<PokeApiController> _logger;
+    private readonly IPokeAPI _pokeAPI;
+
+    public PokeApiController(
+        ILogger<PokeApiController> logger,
+        IPokeAPI pokeAPI)
+    {
+        _logger = logger;
+        this._pokeAPI = pokeAPI;
+    }
+}
+````
+
+`Program.cs` :
+
+````csharp
+builder.Services.AddScoped<IPokeApi, PokeApi>();
+
+builder.Services.AddHttpClient();
+````
+
+`PokeApi.cs`
+
+````csharp
+public class PokeApi : IPokeApi
+{
+    private readonly HttpClient _client;
+
+    public PokeApi(HttpClient client)
+    {
+        _client = client;
+    }
+}
+````
+
+Utilisez ce dont vous avez vu dans ce TP pour créer un endpoint GET GetByPokemonName(), qui ira chercher sur PokeApi le pokémon correspondant au nom entré.
+
+> 💡 HttpClient est l'outil dotnet permettant de faire des requêtes HTTP dans le code.
+
+> 💡 Vous pouvez vous aider de sites comme <https://json2csharp.com/> pour convertir un fichier JSON en classe dotnet. C'est particulièrement utile pour convertir un résultat d'une requête HTTP (qui est en JSON) en classes typées dotnet.
+
+## (12) Pokémon Favoris
+
+Implémentez une nouvelle entité permettant de mettre en favori des pokémons. Créez un nouveau controlleur et un nouveau service permettant d'ajouter/d'enlever un pokémon des favoris.
+
+## (13) Encore plus ?
+
+Sujet libre. Ajoutez au service ce que vous voulez, mais pensez à bien mettre des commentaires pour ma compréhension.
