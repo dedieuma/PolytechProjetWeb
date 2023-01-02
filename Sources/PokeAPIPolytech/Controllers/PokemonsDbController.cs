@@ -10,8 +10,6 @@ public class PokemonsDbController : ControllerBase
     private readonly ILogger<PokemonsController> _logger;
     private readonly IPokemonsDbSources _pokemonsDbSources;
 
-
-
     public PokemonsDbController(
         ILogger<PokemonsController> logger,
         IPokemonsDbSources pokemonsDbSources)
