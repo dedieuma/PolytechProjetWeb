@@ -16,7 +16,7 @@ Ainsi, une `class` en dotnet peut facilement être convertie en une `table` SQL.
 
 Enfin, cela élimine le besoin d'écrire à la main les requêtes SQL, l'outil ayant à sa disposition des moyens d'effectuer une requête à partir de directives propres à dotnet.
 
-> ⚠️ Ne confondez pas `Entity Framework Core` de `Entity Framework`. De la même manière que Microsoft a voulu réécrire le .NET Framework vers .NET Core, les ingénieurs de Microsoft ont réécri Entity Framework (aussi appelé EF6) vers Entity Framework Core. Entity Framework Core est la nouvelle version d'Entity Framework après EF6.
+> ⚠️ Ne confondez pas `Entity Framework Core` de `Entity Framework`. De la même manière que Microsoft a voulu réécrire le .NET Framework vers .NET Core, les ingénieurs de Microsoft ont réécri Entity Framework (aussi appelé EF6) vers Entity Framework Core. Entity Framework Core est la nouvelle version d'Entity Framework après EF6. Ils n'ont pas les mêmes designs et leur utilisation se fait différemment.
 
 ## (1) Mettre en place un DbContext
 
@@ -32,7 +32,7 @@ Installer ensuite le package `Sqlite`, un léger fournisseur de base de données
 dotnet add package Microsoft.EntityFrameworkCore.Sqlite
 ```
 
-Dans le `Program.cs`, enregistrer un contexte de base de données.Aajoutez la ligne 
+Dans le `Program.cs`, enregistrer un contexte de base de données. Ajoutez la ligne 
 
 ````csharp
 builder.Services.AddSwaggerGen(); // existant
@@ -67,7 +67,7 @@ Ajoutons des données à notre (future) Base, via EF Core.
 
 Tout d'abord, rendons notre liste de Pokémons `static` pour pouvoir y accéder depuis l'extérieur de la classe. 
 
-> 💡 Pour rappel, quand une variable est rendue `static`, une seule et même copie de cette variable est créée. Les variables `static` sont accédées avec le nom de la class, et donc un objet instance de la classe n'est pas requis. Par exemple, la variable static Pokemons sera accessible comme tel : PokemonsSources.Pokemons   
+> 💡 Pour rappel, quand une variable est rendue `static`, une seule et même copie de cette variable est créée. Les variables `static` sont accédées avec le nom de la classe, et donc une instance de la classe n'est pas requise. Par exemple, la variable static Pokemons sera accessible comme ceci : `PokemonsSources.Pokemons`   
 
 `Services/PokemonsSources.cs` : 
 
@@ -95,7 +95,9 @@ protected override void OnModelCreating(ModelBuilder modelBuilder)
 }
 ````
 
->💡 Cette méthod OnModelCreating(ModelBuilder modelBuilder) est proposée à la réimplémentation par le DBContext dont la class PokemonSources hérite. C'est pour cela que nous avons un mot clé `override`.
+> 💡 La méthode `OnModelCreating(ModelBuilder modelBuilder)` est utilisée par le framework EF Core. A un moment donné dans l'éxécution, le framework appelle cette méthode, et éxécute les directives qui y sont présentes. Par défaut, la méthode ne contient rien, mais on peut l'`override` pour indiquer que des opérations sont à faire. 
+
+> 💡 Ce genre de comportement d'une méthode, de pouvoir surcharger un comportement mais que cela reste optionnel, est caractéristique d'une méthode avec le mot clé `virtual` : c'est une méthode qui possède un comportement par défaut, mais qui peut être réécrit par la classe qui étend (définition exposée, implémentation requise). Les autres mot-clés de comportement sont `abstract` ou encore `interface`.
 
 # (2) Faire un GET pour récupérer les Pokémons de la BDD
 
@@ -195,7 +197,7 @@ Microsoft.Data.Sqlite.SqliteException (0x80004005): SQLite Error 1: 'no such tab
    ....
 ````
 
-> ⚠️ Effectivement, pour le moment, nous n'avons fait que définir le lien EF Core entre la table SQL Pokemon et la classe .NET `Pokemon`. La table `Pokemons` elle, n'a pas encore été créée. 
+> ⚠️ Effectivement, pour le moment, nous n'avons fait que définir le lien EF Core entre la table SQL Pokemon et la classe .NET `Pokemon`. La table `Pokemons` elle, n'a pas encore été créée. Pour comparer, il manque les directives SQL `CREATE TABLE Pokemons`...
 
 ## (3) Migration de la Base de données
 
@@ -239,7 +241,7 @@ En revanche ouvrez le premier fichier : il contient deux méthodes `Up` et `Down
 
 > ⚠️ Il est fortement conseillé de ne pas toucher directement au code des fichiers sous le dossier `Migrations`, mais plutôt d'utiliser l'outil `dotnet ef`. Les fichiers sont du code généré.
 
-On a notre script de migration, appliquons-le à notre BD. La commande à exécuter est la suivante : 
+Nous avons notre script de migration, appliquons-le à notre BD. La commande à exécuter est la suivante : 
 
 > `dotnet ef database update`
 
@@ -326,7 +328,9 @@ public class Ability
 }
 ````
 
-> 💡 Ici, le mot clé `virtual` permet à la collection `Pokemons` d'être substitué dans une classe dérivant de Ability.
+> 💡 Ici, le mot clé `virtual` permet à la collection `Pokemons` d'être substitué dans une classe dérivant de Ability. 
+
+> 💡 Notez que le mot clé `virtual` n'est plus requis dans les versions récentes de EF Core. Cependant, je préfère le garder, car cela montre à la future personne relisant le code que cette `ICollection` est en réalité une liste de Pokémons venant d'une autre table SQL. Ability ne possède pas dans sa table une liste de Pokémons.
 
 Ajoutons une ligne dans `Pokemons.cs`
 
@@ -364,6 +368,8 @@ modelBuilder.Entity<Pokemon>()
            
 ````
 > 💡 Cela ajoute la compétence "shield-dust" au pokémon "Caterpie".
+
+> 💡 Une relation Many-to-Many utilise une table d'association entre deux entités. C'est toujours le cas ici, mais EF Core nous le cache. Le `.UsingEntity(abPok => abPok...` configure des données que possédera la table d'association.
 
 Ptit `dotnet ef migrations add "Abilities"` into `dotnet ef database update`
 
@@ -418,7 +424,7 @@ EF Core propose ce que l'on appelle des projections "Linq To SQL". Le principe e
 
 > 💡 Il s'utilise de cette manière : `maListe.MonOpérationLinq()`. Consultez <https://learn.microsoft.com/en-us/dotnet/api/system.linq.enumerable.firstordefault?view=net-7.0>
 
-> 💡 EF Core contient des providers Linq-To-SQL pour tout les moteurs de base de données populaires. Aussi, il propose des providers pour des bases de données non-relationnelles. Ainsi, vous pouvez aussi utiliser EF Core pour manipuler des collections Mongo, par exemple.
+> 💡 EF Core contient des providers Linq-To-SQL pour tous les moteurs de base de données populaires. Aussi, il propose des providers pour des bases de données non-relationnelles. Ainsi, vous pouvez aussi utiliser EF Core pour manipuler des collections Mongo, par exemple.
 
 Nous allons réécrire nos query SQL brut en Linq-to-SQL.
 
