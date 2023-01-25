@@ -56,7 +56,7 @@ public class Rectangle : IShape
 }
 ````
 
-L'interface n'étant pas implémentée, assurez vous que l'éditeur signale en rouge la classe. Vous pouvez fix le problème en mettant le curseur sur le code souligné en rouge, et en faisant le raccourci `Ctrl+.` (raccourci par défaut).
+L'interface n'étant pas implémentée, assurez vous que l'éditeur signale en rouge la classe. Vous pouvez fix le problème en mettant le curseur sur le code souligné en rouge, et en faisant le raccourci `Ctrl+;` (raccourci par défaut).
 
 Vous devriez avoir ce code :
 
@@ -399,7 +399,7 @@ Utilisez Linq pour savoir :
 - Quelles sont les formes où la longueur est un multiple de 5
 - Sur ces formes, faites l'addition de leurs périmètres, et affichez le dans la Console.
 
-> Linq ('Link' ou 'Lin-kiou') est une bibliothèque dotnet permettant de faire des opérations sur les énumérations ou des listes. Il s'utilise de cette manière : `maListe.MonOpérationLinq()`. Consultez <https://learn.microsoft.com/en-us/dotnet/api/system.linq.enumerable.firstordefault?view=net-7.0>
+> Linq ('Link' ou 'Lin-kiou') est une bibliothèque dotnet permettant de faire des opérations sur les énumérations ou des listes. Il s'utilise de cette manière : `maListe.MonOpérationLinq()`. Consultez <https://learn.microsoft.com/en-us/dotnet/api/system.linq.enumerable.firstordefault?view=net-7.0> (la page redirige vers la définition de `FirstOrDefault()`, regardez ans le menu de gauche pour voir les autres méthodes)
 
 ---
 
@@ -428,5 +428,3 @@ Devrait retourner :
 > Note : `Console.WriteLine()` écrit dans la console, puis fait un retour à la ligne. `Console.Write()` écrit dans la console sans retourner à la ligne.
 
 **Q6 : Copiez le code des classes que vous ferez dans la feuille de réponse**
-
-> Pouvez-vous refaire l'exercice, mais à la place des `for` ou `foreach`, utiliser Linq ?
