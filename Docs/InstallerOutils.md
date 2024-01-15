@@ -17,7 +17,7 @@ https://code.visualstudio.com/
 ### Dotnet
 
 Installer le SDK dotnet, version la plus récente
-A Février 2023, c'est .NET 7.0
+A Janvier 2024, c'est .NET 8.0
 
 https://dotnet.microsoft.com/en-us/download
 
