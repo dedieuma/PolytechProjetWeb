@@ -18,6 +18,48 @@ Ouvrez la WebAPI dotnet que vous avez généré au TP précédent.
 
 Supprimez `Controllers/WeatherForecaseController.cs` et `WeatherForecast.cs`.
 
+Si vous avez eu une génération avec .NET 8, il vous faut copier ce `Program.cs` à la place du votre :
+
+````csharp
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+builder.Services.AddControllers();
+
+builder.Services.AddCors();
+
+builder.Services.AddAuthorization();
+
+var app = builder.Build();
+
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+app.UseCors(
+    options => options
+        .AllowAnyOrigin()
+        .AllowAnyHeader()
+        .AllowAnyMethod()
+);
+
+app.UseHttpsRedirection();
+
+app.UseAuthorization();
+
+app.MapControllers();
+
+app.Run();
+
+````
+
 ---
 
 ## (1) Définition d'un pokémon
